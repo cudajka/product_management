@@ -23,7 +23,13 @@ class Product extends Model
     public function brands(){
         return $this->belongsTo(Brand::class, 'brand_id')->withDefault();
     }
+    public function product_variants(){
+        return $this->hasMany(ProductVariant::class);
+    }
     public function colors(){
         return $this->belongsToMany(Color::class, 'product_variants');
+    }
+    public function sizes(){
+        return $this->belongsToMany(Size::class, 'product_variants');
     }
 }

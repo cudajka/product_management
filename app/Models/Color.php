@@ -15,5 +15,7 @@ class Color extends Model
     protected $fillable = [];
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
-
+    public function products(){
+        return $this->belongsToMany(Product::class, 'product_variants');
+    }
 }
