@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Color;
 use Illuminate\Http\Request;
 
 class ColorController extends Controller
@@ -11,7 +12,8 @@ class ColorController extends Controller
      */
     public function index()
     {
-        //
+        $colors = Color::all();
+        return view('backend.colors.index', compact('colors'));
     }
 
     /**
@@ -19,7 +21,7 @@ class ColorController extends Controller
      */
     public function create()
     {
-        //
+        return view('backend.colors.create');
     }
 
     /**
@@ -27,7 +29,11 @@ class ColorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $newColor = new Color();
+        $newColor->name = $request->input('name');
+        $newColor->code = $request->input('code');
+        $newColor->save();
+        return redirect()->route('colors.index');
     }
 
     /**
@@ -43,7 +49,8 @@ class ColorController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $editColor = Color::findOrFail($id);
+        return view('backend.colors.edit', compact('editColor'));
     }
 
     /**
@@ -51,7 +58,11 @@ class ColorController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $editColor = Color::findOrFail($id);
+        $editColor->name = $request->input('name');
+        $editColor->code = $request->input('code');
+        $editColor->save();
+        return redirect()->route('colors.index')->with('success', 'Color has been updated');
     }
 
     /**
@@ -59,6 +70,8 @@ class ColorController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $deleteColor = Color::findOrFail($id);
+        $deleteColor->delete();
+        return redirect()->route('colors.index')->with('success', 'Color has been deleted');
     }
 }

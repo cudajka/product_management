@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class BrandController extends Controller
@@ -11,7 +13,8 @@ class BrandController extends Controller
      */
     public function index()
     {
-        //
+        $brands = Brand::all();
+        return view('backend.brands.index', compact('brands'));
     }
 
     /**
@@ -19,7 +22,7 @@ class BrandController extends Controller
      */
     public function create()
     {
-        //
+        return view('backend.brands.create');
     }
 
     /**
@@ -27,7 +30,12 @@ class BrandController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $newBrand = new Brand();
+
+        $newBrand->name = $request->input('name');
+        $newBrand->save();
+
+        return redirect()->route('brands.index')->with('success', 'Brand has been created');
     }
 
     /**
@@ -43,7 +51,8 @@ class BrandController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $editBrand = Brand::findOrFail($id);
+        return view('backend.brands.edit', compact('editBrand'));
     }
 
     /**
@@ -51,7 +60,10 @@ class BrandController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $editBrand = Product::findOrFail($id);
+        $editBrand->name = $request->input('name');
+        $editBrand->save();
+        return redirect()->route('brands.index')->with('success', 'Brand has been updated');
     }
 
     /**

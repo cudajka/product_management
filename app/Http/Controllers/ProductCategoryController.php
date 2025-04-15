@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 
 class ProductCategoryController extends Controller
@@ -11,7 +13,8 @@ class ProductCategoryController extends Controller
      */
     public function index()
     {
-        //
+        $productCategories = ProductCategory::all();
+        return view('backend.product_categories.index', compact('productCategories'));
     }
 
     /**
@@ -19,7 +22,8 @@ class ProductCategoryController extends Controller
      */
     public function create()
     {
-        //
+        $productCategories = ProductCategory::all();
+        return view('backend.product_categories.create', compact('productCategories'));
     }
 
     /**
@@ -27,7 +31,11 @@ class ProductCategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $newProductCategory = new ProductCategory();
+        $newProductCategory->name = $request->input('name');
+        $newProductCategory->save();
+
+        return redirect()->route('product_categories.index')->with('success', 'The product category has been created.');
     }
 
     /**
@@ -43,7 +51,9 @@ class ProductCategoryController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $productCategories = ProductCategory::all();
+        $editProductCategory = ProductCategory::findOrFail($id);
+        return view('backend.product_categories.edit', compact('productCategories', 'editProductCategory'));
     }
 
     /**
@@ -51,7 +61,10 @@ class ProductCategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $editProductCategory = ProductCategory::findOrFail($id);
+        $editProductCategory->name = $request->input('name');
+        $editProductCategory->save();
+        return redirect()->route('product_categories.index')->with('success', 'The product category has been updated.');
     }
 
     /**
@@ -59,6 +72,8 @@ class ProductCategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $deleteProductCategory = ProductCategory::findOrFail($id);
+        $deleteProductCategory->delete();
+        return redirect()->route('product_categories.index')->with('success', 'The product category has been deleted.');
     }
 }

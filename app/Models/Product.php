@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory, HasAttributes;
-    protected $table = 'products';
+//    protected $table = 'products';
     protected $primaryKey = 'id';
     protected $fillable = [''];
     public $incrementing = true;
@@ -17,19 +17,22 @@ class Product extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
     const DELETED_AT = 'deleted_at';
-    public function product_categories(){
-        return $this->belongsTo(ProductCategory::class, 'product_id')->withDefault();
+    public function product_category()
+    {
+        return $this->belongsTo(ProductCategory::class, 'category_id');
     }
-    public function brands(){
-        return $this->belongsTo(Brand::class, 'brand_id')->withDefault();
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class, 'brand_id');
     }
-    public function product_variants(){
+    public function product_variant()
+    {
         return $this->hasMany(ProductVariant::class);
     }
-    public function colors(){
+    public function color(){
         return $this->belongsToMany(Color::class, 'product_variants');
     }
-    public function sizes(){
+    public function size(){
         return $this->belongsToMany(Size::class, 'product_variants');
     }
 }
