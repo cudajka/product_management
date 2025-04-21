@@ -14,7 +14,7 @@ class ProductCategoryController extends Controller
     public function index()
     {
         $productCategories = ProductCategory::with('parent')->get();
-        return view('backend.product_categories.index', compact('productCategories'));
+        return view('admin.product_categories.index', compact('productCategories'));
     }
 
     /**
@@ -23,7 +23,7 @@ class ProductCategoryController extends Controller
     public function create()
     {
         $productCategories = ProductCategory::all();
-        return view('backend.product_categories.create', compact('productCategories'));
+        return view('admin.product_categories.create', compact('productCategories'));
     }
 
     /**
@@ -54,7 +54,7 @@ class ProductCategoryController extends Controller
     {
         $productCategories = ProductCategory::all();
         $editProductCategory = ProductCategory::findOrFail($id);
-        return view('backend.product_categories.edit', compact('productCategories', 'editProductCategory'));
+        return view('admin.product_categories.edit', compact('productCategories', 'editProductCategory'));
     }
 
     /**

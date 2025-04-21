@@ -1,10 +1,10 @@
-@extends('backend.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Quản lý sản phẩm')
 
-@extends('backend.components.header')
+@extends('admin.components.header')
 
-@extends('backend.components.sidebar')
+@extends('admin.components.sidebar')
 
 @section('main_content')
     <main id="main" class="main">
@@ -106,4 +106,4 @@
     </main><!-- End #main -->
 @endsection
 
-@extends('backend.components.footer')
+@extends('admin.components.footer')

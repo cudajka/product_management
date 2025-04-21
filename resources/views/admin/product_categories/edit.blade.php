@@ -1,10 +1,10 @@
-@extends('backend.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Thêm danh mục')
 
-@extends('backend.components.header')
+@extends('admin.components.header')
 
-@extends('backend.components.sidebar')
+@extends('admin.components.sidebar')
 
 @section('main_content')
     <main id="main" class="main">
@@ -28,17 +28,21 @@
                             <h5 class="card-title">Thêm danh mục</h5>
 
                             <!-- Multi Columns Form -->
-                            <form action="{{route('product_categories.update', ['product_category'=>$editProductCategory->id])}}" class="row g-3" method="post" enctype="multipart/form-data">
+                            <form action="{{route('product_categories.update', ['product_category'=>$editProductCategory->id])}}"
+                                  class="row g-3" method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <div class="col-md-6">
                                     <label for="name" class="form-label">Tên danh mục</label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{$editProductCategory->name}}">
+                                    <input type="text" class="form-control" id="name" name="name"
+                                           value="{{$editProductCategory->name}}">
                                 </div>
                                 <label for="parent_id" class="form-label">Danh mục cha</label>
                                 <div class="col">
                                     <select class="form-select" aria-label="" name="parent_id">
-                                        <option value="0" {{($editProductCategory->parent_id) == 0 ? "selected" : ""}}>-- Không có --</option>
+                                        <option value="0" {{($editProductCategory->parent_id) == 0 ? "selected" : ""}}>
+                                            -- Không có --
+                                        </option>
                                         @foreach($productCategories as $key => $value)
                                             <option value="{{$value->id}}" {{($editProductCategory->parent_id) == $value->id ? "selected" : ""}}>
                                                 {{$value->name}}
@@ -62,4 +66,4 @@
     </main><!-- End #main -->
 @endsection
 
-@extends('backend.components.footer')
+@extends('admin.components.footer')

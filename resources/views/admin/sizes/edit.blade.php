@@ -1,10 +1,10 @@
-@extends('backend.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Thêm khích thước')
 
-@extends('backend.components.header')
+@extends('admin.components.header')
 
-@extends('backend.components.sidebar')
+@extends('admin.components.sidebar')
 
 @section('main_content')
     <main id="main" class="main">
@@ -28,16 +28,19 @@
                             <h5 class="card-title">Thêm khích thước</h5>
 
                             <!-- Multi Columns Form -->
-                            <form action="{{route('sizes.update', ['size' => $editSize->id])}}" class="row g-3" method="post" enctype="multipart/form-data">
+                            <form action="{{route('sizes.update', ['size' => $editSize->id])}}" class="row g-3"
+                                  method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <div class="col-md-6">
                                     <label for="name" class="form-label">Tên kích thước</label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{$editSize->name}}">
+                                    <input type="text" class="form-control" id="name" name="name"
+                                           value="{{$editSize->name}}">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="number" class="form-label">Size</label>
-                                    <input type="number" class="form-control" id="number" name="number" value="{{$editSize->number}}">
+                                    <input type="number" class="form-control" id="number" name="number"
+                                           value="{{$editSize->number}}">
                                 </div>
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Lưu thông tin</button>
@@ -55,4 +58,4 @@
     </main><!-- End #main -->
 @endsection
 
-@extends('backend.components.footer')
+@extends('admin.components.footer')

@@ -13,7 +13,7 @@ class SizeController extends Controller
     public function index()
     {
         $sizes = Size::all();
-        return view('backend.sizes.index', compact('sizes'));
+        return view('admin.sizes.index', compact('sizes'));
     }
 
     /**
@@ -21,7 +21,7 @@ class SizeController extends Controller
      */
     public function create()
     {
-        return view('backend.sizes.create');
+        return view('admin.sizes.create');
     }
 
     /**
@@ -50,7 +50,7 @@ class SizeController extends Controller
     public function edit(string $id)
     {
         $editSize = Size::findOrFail($id);
-        return view('backend.sizes.edit', compact('editSize'));
+        return view('admin.sizes.edit', compact('editSize'));
     }
 
     /**

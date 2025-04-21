@@ -7,7 +7,6 @@ use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\SizeController;
-use App\Models\Size;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -15,7 +14,7 @@ Route::get('/', function () {
 });
 
 //Vào dashboard
-Route::get('/admin', [DashboardController::class, 'index'])->name('admin.index');
+Route::get('admin', [DashboardController::class, 'index'])->name('admin.index');
 
 Route::prefix('admin/products-manager/')->group(function () {
     //CRUD sản phẩm

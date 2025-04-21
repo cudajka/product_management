@@ -1,10 +1,10 @@
-@extends('backend.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Quản lý màu sắc')
 
-@extends('backend.components.header')
+@extends('admin.components.header')
 
-@extends('backend.components.sidebar')
+@extends('admin.components.sidebar')
 
 @section('main_content')
     <main id="main" class="main">
@@ -59,12 +59,17 @@
                                     <tr>
                                         <th scope="row">{{$key+1}}</th>
                                         <td>{{$value->name}}</td>
-                                        <td><span style="background-color: {{$value->code}}; border: 1px black solid; width: 100%; height: 30px; display: inline-block"></span></td>
+                                        <td>
+                                            <span style="background-color: {{$value->code}}; border: 1px black solid; width: 100%; height: 30px; display: inline-block"></span>
+                                        </td>
                                         <td>{{$value->code}}</td>
-                                        <td >
+                                        <td>
                                             <div class="d-inline-flex">
-                                                <a href="{{route('colors.edit', ['color'=>$value->id])}}" class="d-inline-block btn text-success"><i class="bx bxs-edit-alt"></i></a>
-                                                <form action="{{ route('colors.destroy', ['color' => $value->id]) }}" method="POST" onsubmit="return confirm('Bạn có muốn xóa không?')">
+                                                <a href="{{route('colors.edit', ['color'=>$value->id])}}"
+                                                   class="d-inline-block btn text-success"><i
+                                                            class="bx bxs-edit-alt"></i></a>
+                                                <form action="{{ route('colors.destroy', ['color' => $value->id]) }}"
+                                                      method="POST" onsubmit="return confirm('Bạn có muốn xóa không?')">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="d-inline-block btn text-danger">
@@ -89,4 +94,4 @@
     </main><!-- End #main -->
 @endsection
 
-@extends('backend.components.footer')
+@extends('admin.components.footer')

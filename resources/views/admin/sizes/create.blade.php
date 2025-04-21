@@ -1,10 +1,10 @@
-@extends('backend.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Thêm kích thước')
 
-@extends('backend.components.header')
+@extends('admin.components.header')
 
-@extends('backend.components.sidebar')
+@extends('admin.components.sidebar')
 
 @section('main_content')
     <main id="main" class="main">
@@ -28,7 +28,8 @@
                             <h5 class="card-title">Thêm kích thước</h5>
 
                             <!-- Multi Columns Form -->
-                            <form action="{{route('sizes.store')}}" class="row g-3" method="post" enctype="multipart/form-data">
+                            <form action="{{route('sizes.store')}}" class="row g-3" method="post"
+                                  enctype="multipart/form-data">
                                 @csrf
                                 <div class="col-md-6">
                                     <label for="name" class="form-label">Tên kích thước</label>
@@ -54,4 +55,4 @@
     </main><!-- End #main -->
 @endsection
 
-@extends('backend.components.footer')
+@extends('admin.components.footer')

@@ -16,7 +16,7 @@ class ProductVariantController extends Controller
     public function index()
     {
         $productVariants = ProductVariant::all();
-        return view('backend.product_variants.index', compact('productVariants'));
+        return view('admin.product_variants.index', compact('productVariants'));
     }
 
     /**
@@ -27,7 +27,7 @@ class ProductVariantController extends Controller
         $products = Product::all();
         $colors = Color::all();
         $sizes = Size::all();
-        return view('backend.product_variants.create', compact('products', 'colors', 'sizes'));
+        return view('admin.product_variants.create', compact('products', 'colors', 'sizes'));
     }
 
     /**
@@ -60,7 +60,7 @@ class ProductVariantController extends Controller
     public function edit(string $id)
     {
         $editProductVariant = ProductVariant::findOrFail($id);
-        return view('backend.product_variants.edit', compact('editProductVariant'));
+        return view('admin.product_variants.edit', compact('editProductVariant'));
     }
 
     /**

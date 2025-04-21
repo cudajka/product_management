@@ -1,10 +1,10 @@
-@extends('backend.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Quản lý danh mục sản phẩm')
 
-@extends('backend.components.header')
+@extends('admin.components.header')
 
-@extends('backend.components.sidebar')
+@extends('admin.components.sidebar')
 
 @section('main_content')
     <main id="main" class="main">
@@ -34,7 +34,8 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Danh sách danh mục</h5>
-                            <a href="{{route('product_categories.create')}}" class="btn btn-primary">Thêm danh mục sản phẩm</a>
+                            <a href="{{route('product_categories.create')}}" class="btn btn-primary">Thêm danh mục sản
+                                phẩm</a>
 
                             <!-- Table with stripped rows -->
                             <table class="table table-striped">
@@ -60,8 +61,11 @@
                                         <td>{{optional($value->parent)->name}}</td>
                                         <td>
                                             <div class="d-inline-flex">
-                                                <a href="{{route('product_categories.edit', ['product_category'=>$value->id])}}" class="btn text-success"><i class="bx bxs-edit-alt"></i></a>
-                                                <form action="{{ route('product_categories.destroy', ['product_category' => $value->id]) }}" method="POST" onsubmit="return confirm('Bạn có muốn xóa không?')">
+                                                <a href="{{route('product_categories.edit', ['product_category'=>$value->id])}}"
+                                                   class="btn text-success"><i class="bx bxs-edit-alt"></i></a>
+                                                <form
+                                                    action="{{ route('product_categories.destroy', ['product_category' => $value->id]) }}"
+                                                    method="POST" onsubmit="return confirm('Bạn có muốn xóa không?')">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn text-danger">
@@ -86,4 +90,4 @@
     </main><!-- End #main -->
 @endsection
 
-@extends('backend.components.footer')
+@extends('admin.components.footer')

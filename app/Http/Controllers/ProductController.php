@@ -28,7 +28,7 @@ class ProductController extends Controller
 //        dd($products);
 //        dd($products->toArray());
 //        $products = Product::all();
-        return view('backend.products.index', compact('products'));
+        return view('admin.products.index', compact('products'));
     }
 
     /**
@@ -38,7 +38,7 @@ class ProductController extends Controller
     {
         $productCategories = ProductCategory::all();
         $brands = Brand::all();
-        return view('backend.products.create', compact('productCategories', 'brands'));
+        return view('admin.products.create', compact('productCategories', 'brands'));
     }
 
     /**
@@ -76,7 +76,7 @@ class ProductController extends Controller
         $productCategories = ProductCategory::all();
         $brands = Brand::all();
         $editProduct = Product::with('productCategory', 'brand')->find($id);
-        return view('backend.products.edit', compact('editProduct', 'productCategories', 'brands'));
+        return view('admin.products.edit', compact('editProduct', 'productCategories', 'brands'));
     }
 
     /**

@@ -1,10 +1,10 @@
-@extends('backend.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Sửa số lượng')
 
-@extends('backend.components.header')
+@extends('admin.components.header')
 
-@extends('backend.components.sidebar')
+@extends('admin.components.sidebar')
 
 @section('main_content')
     <main id="main" class="main">
@@ -28,19 +28,24 @@
                             <h5 class="card-title">Sửa số lượng</h5>
 
                             <!-- Multi Columns Form -->
-                            <form action="{{route('product_variants.update', ['product_variant' => $editProductVariant->id])}}" class="row g-3" method="post" enctype="multipart/form-data">
+                            <form
+                                    action="{{route('product_variants.update', ['product_variant' => $editProductVariant->id])}}"
+                                    class="row g-3" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="col-md-6">
                                     <label for="name" class="form-label">Sản phẩm</label>
-                                    <input type="text" class="form-control" id="product_id" name="product_id" value="{{$editProductVariant->productName}}" disabled>
+                                    <input type="text" class="form-control" id="product_id" name="product_id"
+                                           value="{{$editProductVariant->productName}}" disabled>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="size_id" class="form-label">Kích thước</label>
-                                    <input type="text" class="form-control" id="size_id" name="size_id" value="{{$editProductVariant->sizeNumber}}" disabled>
+                                    <input type="text" class="form-control" id="size_id" name="size_id"
+                                           value="{{$editProductVariant->sizeNumber}}" disabled>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="color_id" class="form-label">Màu sắc</label>
-                                    <input type="text" class="form-control" id="color_id" name="color_id" value="{{$editProductVariant->colorName}}" disabled>
+                                    <input type="text" class="form-control" id="color_id" name="color_id"
+                                           value="{{$editProductVariant->colorName}}" disabled>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="quantity" class="form-label">Số lượng</label>
@@ -62,4 +67,4 @@
     </main><!-- End #main -->
 @endsection
 
-@extends('backend.components.footer')
+@extends('admin.components.footer')

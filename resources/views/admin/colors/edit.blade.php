@@ -1,10 +1,10 @@
-@extends('backend.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Sửa màu sắc')
 
-@extends('backend.components.header')
+@extends('admin.components.header')
 
-@extends('backend.components.sidebar')
+@extends('admin.components.sidebar')
 
 @section('main_content')
     <main id="main" class="main">
@@ -28,16 +28,19 @@
                             <h5 class="card-title">Sửa màu sắc</h5>
 
                             <!-- Multi Columns Form -->
-                            <form action="{{route('colors.update', ['color' => $editColor->id])}}" class="row g-3" method="post" enctype="multipart/form-data">
+                            <form action="{{route('colors.update', ['color' => $editColor->id])}}" class="row g-3"
+                                  method="post" enctype="multipart/form-data">
                                 @csrf
                                 @method('PUT')
                                 <div class="col-md-6">
                                     <label for="name" class="form-label">Tên màu sắc</label>
-                                    <input type="text" class="form-control" id="name" name="name" value="{{$editColor->name}}">
+                                    <input type="text" class="form-control" id="name" name="name"
+                                           value="{{$editColor->name}}">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="name" class="form-label">Mã màu</label>
-                                    <input type="text" class="form-control" id="code" name="code" value="{{$editColor->code}}">
+                                    <input type="text" class="form-control" id="code" name="code"
+                                           value="{{$editColor->code}}">
                                 </div>
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Lưu thông tin</button>
@@ -55,4 +58,4 @@
     </main><!-- End #main -->
 @endsection
 
-@extends('backend.components.footer')
+@extends('admin.components.footer')

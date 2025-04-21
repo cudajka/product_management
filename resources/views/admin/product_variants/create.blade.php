@@ -1,10 +1,10 @@
-@extends('backend.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Thêm số lượng')
 
-@extends('backend.components.header')
+@extends('admin.components.header')
 
-@extends('backend.components.sidebar')
+@extends('admin.components.sidebar')
 
 @section('main_content')
     <main id="main" class="main">
@@ -28,12 +28,14 @@
                             <h5 class="card-title">Thêm số lượng</h5>
 
                             <!-- Multi Columns Form -->
-                            <form action="{{route('product_variants.store')}}" class="row g-3" method="post" enctype="multipart/form-data">
+                            <form action="{{route('product_variants.store')}}" class="row g-3" method="post"
+                                  enctype="multipart/form-data">
                                 @csrf
                                 <div class="col-md-6">
                                     <label for="product_id" class="form-label">Sản phẩm</label>
                                     <div class="col">
-                                        <select class="form-select" id="product_id" aria-label="Default select example" name="product_id">
+                                        <select class="form-select" id="product_id" aria-label="Default select example"
+                                                name="product_id">
                                             @foreach($products as $key => $product)
                                                 <option value="{{$product->id}}">{{$product->name}}</option>
                                             @endforeach
@@ -43,7 +45,8 @@
                                 <div class="col-md-6">
                                     <label for="size_id" class="form-label">Kích thước</label>
                                     <div class="col">
-                                        <select class="form-select" id="size_id" aria-label="Default select example" name="size_id">
+                                        <select class="form-select" id="size_id" aria-label="Default select example"
+                                                name="size_id">
                                             @foreach($sizes as $key => $size)
                                                 <option value="{{$size->id}}">{{$size->name}}</option>
                                             @endforeach
@@ -53,7 +56,8 @@
                                 <div class="col-md-6">
                                     <label for="color_id" class="form-label">Màu sắc</label>
                                     <div class="col">
-                                        <select class="form-select" id="color_id" aria-label="Default select example" name="color_id">
+                                        <select class="form-select" id="color_id" aria-label="Default select example"
+                                                name="color_id">
                                             @foreach($colors as $key => $color)
                                                 <option value="{{$color->id}}">{{$color->name}}</option>
                                             @endforeach
@@ -80,4 +84,4 @@
     </main><!-- End #main -->
 @endsection
 
-@extends('backend.components.footer')
+@extends('admin.components.footer')

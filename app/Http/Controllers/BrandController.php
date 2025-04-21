@@ -14,7 +14,7 @@ class BrandController extends Controller
     public function index()
     {
         $brands = Brand::all();
-        return view('backend.brands.index', compact('brands'));
+        return view('admin.brands.index', compact('brands'));
     }
 
     /**
@@ -22,7 +22,7 @@ class BrandController extends Controller
      */
     public function create()
     {
-        return view('backend.brands.create');
+        return view('admin.brands.create');
     }
 
     /**
@@ -52,7 +52,7 @@ class BrandController extends Controller
     public function edit(string $id)
     {
         $editBrand = Brand::findOrFail($id);
-        return view('backend.brands.edit', compact('editBrand'));
+        return view('admin.brands.edit', compact('editBrand'));
     }
 
     /**

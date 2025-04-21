@@ -13,7 +13,7 @@ class ColorController extends Controller
     public function index()
     {
         $colors = Color::all();
-        return view('backend.colors.index', compact('colors'));
+        return view('admin.colors.index', compact('colors'));
     }
 
     /**
@@ -21,7 +21,7 @@ class ColorController extends Controller
      */
     public function create()
     {
-        return view('backend.colors.create');
+        return view('admin.colors.create');
     }
 
     /**
@@ -50,7 +50,7 @@ class ColorController extends Controller
     public function edit(string $id)
     {
         $editColor = Color::findOrFail($id);
-        return view('backend.colors.edit', compact('editColor'));
+        return view('admin.colors.edit', compact('editColor'));
     }
 
     /**

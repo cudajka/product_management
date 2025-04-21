@@ -1,10 +1,10 @@
-@extends('backend.layouts.app')
+@extends('admin.layouts.app')
 
 @section('title', 'Quản lý kích thước')
 
-@extends('backend.components.header')
+@extends('admin.components.header')
 
-@extends('backend.components.sidebar')
+@extends('admin.components.sidebar')
 
 @section('main_content')
     <main id="main" class="main">
@@ -60,8 +60,11 @@
                                         <td>{{$value->number}}</td>
                                         <td>
                                             <div class="d-inline-flex">
-                                                <a href="{{route('sizes.edit', ['size'=>$value->id])}}" class="d-inline-block btn text-success"><i class="bx bxs-edit-alt"></i></a>
-                                                <form action="{{ route('sizes.destroy', ['size' => $value->id]) }}" method="POST" onsubmit="return confirm('Bạn có muốn xóa không?')">
+                                                <a href="{{route('sizes.edit', ['size'=>$value->id])}}"
+                                                   class="d-inline-block btn text-success"><i
+                                                            class="bx bxs-edit-alt"></i></a>
+                                                <form action="{{ route('sizes.destroy', ['size' => $value->id]) }}"
+                                                      method="POST" onsubmit="return confirm('Bạn có muốn xóa không?')">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="d-inline-block btn text-danger">
@@ -86,4 +89,4 @@
     </main><!-- End #main -->
 @endsection
 
-@extends('backend.components.footer')
+@extends('admin.components.footer')
