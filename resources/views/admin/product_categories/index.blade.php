@@ -38,6 +38,12 @@
 
                             <!-- Table with stripped rows -->
                             <table class="table table-striped">
+                                <colgroup>
+                                    <col style="width: auto;">
+                                    <col style="width: auto;">
+                                    <col style="width: auto;">
+                                    <col style="width: 1%;">
+                                </colgroup>
                                 <thead>
                                 <tr>
                                     <th scope="col">#</th>
@@ -51,7 +57,7 @@
                                     <tr>
                                         <th scope="row">{{$key+1}}</th>
                                         <td>{{$value->name}}</td>
-                                        <td>{{$value->parent_id}}</td>
+                                        <td>{{optional($value->parent)->name}}</td>
                                         <td>
                                             <div class="d-inline-flex">
                                                 <a href="{{route('product_categories.edit', ['product_category'=>$value->id])}}" class="btn text-success"><i class="bx bxs-edit-alt"></i></a>

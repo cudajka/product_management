@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Color;
+use App\Models\Product;
 use App\Models\ProductVariant;
+use App\Models\Size;
 use Illuminate\Http\Request;
 
 class ProductVariantController extends Controller
@@ -12,7 +15,8 @@ class ProductVariantController extends Controller
      */
     public function index()
     {
-        //
+        $productVariants = ProductVariant::all();
+        return view('backend.product_variants.index', compact('productVariants'));
     }
 
     /**
@@ -20,7 +24,10 @@ class ProductVariantController extends Controller
      */
     public function create()
     {
-        //
+        $products = Product::all();
+        $colors = Color::all();
+        $sizes = Size::all();
+        return view('backend.product_variants.create', compact('products', 'colors', 'sizes'));
     }
 
     /**
@@ -28,7 +35,15 @@ class ProductVariantController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $newProductVariant = new ProductVariant();
+
+        $newProductVariant->product_id = $request->get('product_id');
+        $newProductVariant->color_id = $request->get('color_id');
+        $newProductVariant->size_id = $request->get('size_id');
+        $newProductVariant->quantity = $request->get('quantity');
+        $newProductVariant->save();
+
+        return redirect()->route('product_variants.index')->with('success', 'Product variant added successfully');
     }
 
     /**
@@ -42,15 +57,16 @@ class ProductVariantController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(ProductVariant $productVariant)
+    public function edit(string $id)
     {
-        //
+        $editProductVariant = ProductVariant::findOrFail($id);
+        return view('backend.product_variants.edit', compact('editProductVariant'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ProductVariant $productVariant)
+    public function update(Request $request, string $id)
     {
         //
     }
@@ -58,8 +74,10 @@ class ProductVariantController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProductVariant $productVariant)
+    public function destroy(string $id)
     {
-        //
+        $deleteProductVariant = ProductVariant::findOrFail($id);
+        $deleteProductVariant->delete();
+        return redirect()->route('product_variants.index')->with('success', 'Product variant deleted successfully');
     }
 }

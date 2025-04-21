@@ -1,6 +1,6 @@
 @extends('backend.layouts.app')
 
-@section('title', 'Quản lý sản phẩm')
+@section('title', 'Quản lý màu sắc')
 
 @extends('backend.components.header')
 
@@ -10,12 +10,12 @@
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Danh sách sản phẩm</h1>
+            <h1>Danh sách màu sắc</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{route('admin.index')}}">Trang chủ</a></li>
-{{--                    <li class="breadcrumb-item">Tables</li>--}}
-                    <li class="breadcrumb-item active">Danh sách sản phẩm</li>
+                    {{--                    <li class="breadcrumb-item">Tables</li>--}}
+                    <li class="breadcrumb-item active">Danh sách màu sắc</li>
                 </ol>
             </nav>
         </div><!-- End Page Title -->
@@ -33,37 +33,38 @@
 
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Danh sách sản phẩm</h5>
-                            <a href="{{route('products.create')}}" class="btn btn-primary">Thêm sản phẩm</a>
+                            <h5 class="card-title">Danh sách màu sắc</h5>
+                            <a href="{{route('colors.create')}}" class="btn btn-primary">Thêm màu sắc</a>
 
                             <!-- Table with stripped rows -->
                             <table class="table table-striped">
+                                <colgroup>
+                                    <col style="width: 1%;">
+                                    <col style="width: auto;">
+                                    <col style="width: auto;">
+                                    <col style="width: auto;">
+                                    <col style="width: 1%;">
+                                </colgroup>
                                 <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Tên sản phẩm</th>
-                                    <th scope="col">Giá</th>
-                                    <th scope="col">Trạng thái</th>
-                                    <th scope="col">Danh mục</th>
-                                    <th scope="col">Thương hiệu</th>
-                                    <th scope="col">Mô tả</th>
+                                    <th scope="col">Tên màu sắc</th>
+                                    <th scope="col">Preview</th>
+                                    <th scope="col">Mã màu</th>
                                     <th scope="col">Hành động</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @foreach($products as $key => $value)
+                                @foreach($colors as $key => $value)
                                     <tr>
                                         <th scope="row">{{$key+1}}</th>
                                         <td>{{$value->name}}</td>
-                                        <td>{{$value->price}}</td>
-                                        <td>{{$value->status ? "Còn hàng" : "Hết hàng"}}</td>
-                                        <td>{{$value->product_category?->name ?? $value->category_id}}</td>
-                                        <td>{{$value->brand?->name ?? $value->brand_id}}</td>
-                                        <td>{!! $value->description !!}</td>
-                                        <td>
+                                        <td><span style="background-color: {{$value->code}}; border: 1px black solid; width: 100%; height: 30px; display: inline-block"></span></td>
+                                        <td>{{$value->code}}</td>
+                                        <td >
                                             <div class="d-inline-flex">
-                                                <a href="{{route('products.edit', ['product'=>$value->id])}}" class="d-inline-block btn text-success"><i class="bx bxs-edit-alt"></i></a>
-                                                <form action="{{ route('products.destroy', ['product' => $value->id]) }}" method="POST" onsubmit="return confirm('Bạn có muốn xóa không?')">
+                                                <a href="{{route('colors.edit', ['color'=>$value->id])}}" class="d-inline-block btn text-success"><i class="bx bxs-edit-alt"></i></a>
+                                                <form action="{{ route('colors.destroy', ['color' => $value->id]) }}" method="POST" onsubmit="return confirm('Bạn có muốn xóa không?')">
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="d-inline-block btn text-danger">
@@ -71,7 +72,6 @@
                                                     </button>
                                                 </form>
                                             </div>
-{{--                                                <a href="{{route('products.destroy', ['product'=>$value->id])}}" class="text-danger" onclick="return confirm('Bạn có muốn xóa không?')"><i class="bx bxs-trash-alt"></i></a>--}}
                                         </td>
                                     </tr>
                                 @endforeach

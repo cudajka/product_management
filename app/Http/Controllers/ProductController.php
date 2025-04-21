@@ -14,7 +14,19 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('product_category', 'brand')->orderBy('id', 'desc')->get();
+        $products = Product::with('productCategory', 'brand')->orderBy('id', 'desc')->get();
+//        $products = Product::with('category')->where('id', 1)->get();
+//        dump($products);
+//        foreach ($products as $product) {
+//            dump($product);
+//            dump($product->category);
+//            echo $product->name . '<br>';
+//            echo 'loại: ' . $product->productCategory . '<br>';
+//            echo 'loại: ' . $product->category . '<br>';
+//        }
+//        die;
+//        dd($products);
+//        dd($products->toArray());
 //        $products = Product::all();
         return view('backend.products.index', compact('products'));
     }
@@ -63,7 +75,7 @@ class ProductController extends Controller
 //        $product_id = $request->id;
         $productCategories = ProductCategory::all();
         $brands = Brand::all();
-        $editProduct = Product::with('brands', 'product_categories')->find($id);
+        $editProduct = Product::with('productCategory', 'brand')->find($id);
         return view('backend.products.edit', compact('editProduct', 'productCategories', 'brands'));
     }
 

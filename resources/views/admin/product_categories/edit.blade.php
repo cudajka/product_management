@@ -28,8 +28,9 @@
                             <h5 class="card-title">Thêm danh mục</h5>
 
                             <!-- Multi Columns Form -->
-                            <form action="{{route('product_categories.store', ['product'=>$editProductCategory->id])}}" class="row g-3" method="post" enctype="multipart/form-data">
+                            <form action="{{route('product_categories.update', ['product_category'=>$editProductCategory->id])}}" class="row g-3" method="post" enctype="multipart/form-data">
                                 @csrf
+                                @method('PUT')
                                 <div class="col-md-6">
                                     <label for="name" class="form-label">Tên danh mục</label>
                                     <input type="text" class="form-control" id="name" name="name" value="{{$editProductCategory->name}}">
@@ -39,7 +40,9 @@
                                     <select class="form-select" aria-label="" name="parent_id">
                                         <option value="0" {{($editProductCategory->parent_id) == 0 ? "selected" : ""}}>-- Không có --</option>
                                         @foreach($productCategories as $key => $value)
-                                            <option value="{{$value->id}}" {{($editProductCategory->parent_id) == $value->id ? "selected" : ""}}>{{$value->name}}</option>
+                                            <option value="{{$value->id}}" {{($editProductCategory->parent_id) == $value->id ? "selected" : ""}}>
+                                                {{$value->name}}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>

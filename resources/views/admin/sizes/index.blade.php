@@ -20,7 +20,7 @@
             </nav>
         </div><!-- End Page Title -->
 
-        <section class="section">
+        <section class="section d-flex">
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{session('success')}}
@@ -38,6 +38,12 @@
 
                             <!-- Table with stripped rows -->
                             <table class="table table-striped">
+                                <colgroup>
+                                    <col style="width: auto;">
+                                    <col style="width: auto;">
+                                    <col style="width: auto;">
+                                    <col style="width: 1%;">
+                                </colgroup>
                                 <thead>
                                 <tr>
                                     <th scope="col">#</th>

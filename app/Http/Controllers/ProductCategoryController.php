@@ -13,7 +13,7 @@ class ProductCategoryController extends Controller
      */
     public function index()
     {
-        $productCategories = ProductCategory::all();
+        $productCategories = ProductCategory::with('parent')->get();
         return view('backend.product_categories.index', compact('productCategories'));
     }
 
@@ -32,7 +32,8 @@ class ProductCategoryController extends Controller
     public function store(Request $request)
     {
         $newProductCategory = new ProductCategory();
-        $newProductCategory->name = $request->input('name');
+        $newProductCategory->name = $request->name;
+        $newProductCategory->parent_id = $request->parent_id;
         $newProductCategory->save();
 
         return redirect()->route('product_categories.index')->with('success', 'The product category has been created.');
@@ -62,7 +63,8 @@ class ProductCategoryController extends Controller
     public function update(Request $request, string $id)
     {
         $editProductCategory = ProductCategory::findOrFail($id);
-        $editProductCategory->name = $request->input('name');
+        $editProductCategory->name = $request->name;
+        $editProductCategory->parent_id = $request->parent_id;
         $editProductCategory->save();
         return redirect()->route('product_categories.index')->with('success', 'The product category has been updated.');
     }

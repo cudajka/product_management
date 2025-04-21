@@ -31,49 +31,53 @@
                             <form action="{{route('products.store')}}" class="row g-3" method="post" enctype="multipart/form-data">
                                 @csrf
                                 <div class="col-md-6">
-                                    <label for="name" class="form-label">Tên sản phẩm</label>
-                                    <input type="text" class="form-control" id="name" name="name">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="status" class="form-label">Trạng thái</label>
-                                    <div class="col">
-                                        <select class="form-select" aria-label="Default select example" name="status">
-                                            <option value="1" selected>Còn hàng</option>
-                                            <option value="0">Hết hàng</option>
-                                        </select>
+                                    <div class="col-md">
+                                        <label for="name" class="form-label">Tên sản phẩm</label>
+                                        <input type="text" class="form-control" id="name" name="name">
+                                    </div>
+                                    <div class="col-md">
+                                        <label for="status" class="form-label">Trạng thái</label>
+                                        <div class="col">
+                                            <select class="form-select" aria-label="Default select example" name="status">
+                                                <option value="1" selected>Còn hàng</option>
+                                                <option value="0">Hết hàng</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md">
+                                        <label for="price" class="form-label">Giá</label>
+                                        <input type="number" class="form-control" id="price" name="price">
+                                    </div>
+                                    <div class="col-md">
+                                        <label for="category_id" class="form-label">Loại sản phẩm</label>
+                                        <div class="col">
+                                            <select class="form-select" aria-label="Default select example" name="category_id">
+                                                @foreach($productCategories as $key => $value)
+                                                    <option value="{{$value->id}}">{{$value->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md">
+                                        <label for="brand_id" class="form-label">Thương hiệu</label>
+                                        <div class="col">
+                                            <select class="form-select" aria-label="Default select example" name="brand_id">
+                                                @foreach($brands as $key => $value)
+                                                    <option value="{{$value->id}}">{{$value->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="price" class="form-label">Giá</label>
-                                    <input type="number" class="form-control" id="price" name="price">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="category_id" class="form-label">Loại sản phẩm</label>
-                                    <div class="col">
-                                        <select class="form-select" aria-label="Default select example" name="category_id">
-                                            @foreach($productCategories as $key => $value)
-                                                <option value="{{$value->id}}">{{$value->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="brand_id" class="form-label">Thương hiệu</label>
-                                    <div class="col">
-                                        <select class="form-select" aria-label="Default select example" name="brand_id">
-                                            @foreach($brands as $key => $value)
-                                                <option value="{{$value->id}}">{{$value->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <label for="description" class="form-label">Mô tả sản phẩm</label>
-{{--                                    <textarea class="form-control" id="description" rows="5" name="description"></textarea>--}}
-                                    <!-- TinyMCE Editor -->
-                                    <textarea class="tinymce-editor" id="description" name="description">
+                                    <div class="col-md">
+                                        <label for="description" class="form-label">Mô tả sản phẩm</label>
+                                        {{--                                    <textarea class="form-control" id="description" rows="5" name="description"></textarea>--}}
+                                        <!-- TinyMCE Editor -->
+                                        <textarea class="tinymce-editor" id="description" name="description" rows="3">
 
                                     </textarea><!-- End TinyMCE Editor -->
+                                    </div>
                                 </div>
 {{--                                <div class="col-md-6">--}}
 {{--                                    <label for="inputCity" class="form-label">Ảnh thumbnail</label>--}}

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Brand extends Model
 {
     use HasFactory;
-//    protected $table = 'brands';
+    protected $table = 'brands';
     protected $fillable = [];
     public $incrementing = true;
     public $timestamps = true;
@@ -16,6 +16,6 @@ class Brand extends Model
     const UPDATED_AT = 'updated_at';
     public function products()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class, 'brand_id');
     }
 }
