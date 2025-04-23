@@ -29,13 +29,13 @@
             @endif
             <div class="row">
 
-                <div class="col">
+                <div class="col-md">
 
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Danh sách sản phẩm</h5>
                             <a href="{{route('products.create')}}" class="btn btn-primary">Thêm sản phẩm</a>
-
+                            {{$products->links()}}
                             <div class="table-responsive">
                                 <!-- Table with stripped rows -->
                                 <table class="table table-striped">
@@ -46,6 +46,7 @@
                                         <col style="width: 7%;">
                                         <col style="width: 7%;">
                                         <col style="width: 8%;">
+                                        <col style="width: auto;">
                                         <col style="width: auto;">
                                         <col style="width: 7%;">
                                     </colgroup>
@@ -58,6 +59,7 @@
                                         <th scope="col">Danh mục</th>
                                         <th scope="col">Thương hiệu</th>
                                         <th scope="col">Mô tả</th>
+                                        <th scope="col">Thumbnail</th>
                                         <th scope="col">Hành động</th>
                                     </tr>
                                     </thead>
@@ -71,6 +73,12 @@
                                             <td>{{$product->productCategory->name}}</td>
                                             <td>{{$product->brand?->name}}</td>
                                             <td>{!! $product->description !!}</td>
+                                            <td>
+                                                <div class="img-thumbnail" style="width: 150px; height: 150px">
+                                                    <img class="img-thumbnail" src="{{ asset('storage/' . $product->thumbnail) }}"  alt="">
+                                                </div>
+{{--                                                <img class="img-thumbnail" src="{{ asset('storage/' . $product->thumbnail) }}"  alt="">--}}
+                                            </td>
                                             <td>
                                                 <div class="d-inline-flex">
                                                     <a href="{{route('products.edit', ['product'=>$product->id])}}"
@@ -94,6 +102,7 @@
                                     </tbody>
                                 </table>
                                 <!-- End Table with stripped rows -->
+                                {{$products->links()}}
                             </div>
 
                         </div>

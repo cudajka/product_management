@@ -20,28 +20,38 @@
             </nav>
         </div><!-- End Page Title -->
         <section class="section">
-            <form action="{{route('products.store')}}" method="post" enctype="multipart/form-data">
+{{--            @if ($errors->any())--}}
+{{--                <div class="alert alert-danger">--}}
+{{--                    <ul>--}}
+{{--                        @foreach ($errors->all() as $error)--}}
+{{--                            <li>{{ $error }}</li>--}}
+{{--                        @endforeach--}}
+{{--                    </ul>--}}
+{{--                </div>--}}
+{{--            @endif--}}
+            <form action="{{route('products.store')}}" method="post" enctype="multipart/form-data" novalidate>
                 @csrf
                 <div class="row">
 
-                    <div class="col-8">
+                    <div class="col-md-8">
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Tổng quan</h5>
 
-                                <div class="col">
+                                <div class="col-md">
                                     <div class="row mb-3">
-                                        <label for="name" class="col-sm-2 col-form-label">Tên sản phẩm <span
-                                                class="text-danger">*</span></label>
+                                        <label for="name" class="col-sm-2 col-form-label">Tên sản phẩm <span class="text-danger">*</span></label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="name" name="name" required>
+                                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name">
+                                            @error('name')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <label for="status" class="col-form-label col-sm-2">Trạng thái</label>
                                         <div class="col-sm-10">
-                                            <select class="form-select" aria-label="Default select example"
-                                                    name="status">
+                                            <select class="form-select" aria-label="Default select example" name="status">
                                                 <option value="1" selected>Còn hàng</option>
                                                 <option value="0">Hết hàng</option>
                                             </select>
@@ -50,7 +60,10 @@
                                     <div class="row mb-3">
                                         <label for="price" class="col-sm-2 col-form-label">Giá <span class="text-danger">*</span></label>
                                         <div class="col-sm-4">
-                                            <input type="number" class="form-control" id="price" name="price" required>
+                                            <input type="number" step="1000" min="0" class="form-control @error('price') is-invalid @enderror" id="price" name="price">
+                                            @error('price')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                         <label for="discount" class="col-sm-2 col-form-label">Chiết khấu</label>
                                         <div class="col-sm-4">
@@ -62,8 +75,8 @@
                                         <div class="col-sm-10">
                                             <select class="form-select" aria-label="Default select example"
                                                     name="category_id">
-                                                @foreach($productCategories as $key => $value)
-                                                    <option value="{{$value->id}}">{{$value->name}}</option>
+                                                @foreach($productCategories as $key => $productCategory)
+                                                    <option value="{{$productCategory->id}}">{{$productCategory->name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -73,51 +86,29 @@
                                         <div class="col-sm-10">
                                             <select class="form-select" aria-label="Default select example"
                                                     name="brand_id">
-                                                @foreach($brands as $key => $value)
-                                                    <option value="{{$value->id}}">{{$value->name}}</option>
+                                                @foreach($brands as $key => $brand)
+                                                    <option value="{{$brand->id}}">{{$brand->name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col mb-3">
+                                    <div class="col-md mb-3">
                                         <label for="description" class="form-label">Mô tả sản phẩm</label>
                                         {{--                                    <textarea class="form-control" id="description" rows="5" name="description"></textarea>--}}
                                         <!-- TinyMCE Editor -->
-                                        <textarea class="tinymce-editor" id="description" name="description" rows="3">
-
-                                </textarea><!-- End TinyMCE Editor -->
+                                        <textarea class="tinymce-editor @error('description') is-invalid @enderror" id="description" name="description"></textarea><!-- End TinyMCE Editor -->
+                                        @error('description')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
                                 </div>
 
-                                {{--                                <div class="col-md-4">--}}
-                                {{--                                    <label for="inputState" class="form-label">State</label>--}}
-                                {{--                                    <select id="inputState" class="form-select">--}}
-                                {{--                                        <option selected>Choose...</option>--}}
-                                {{--                                        <option>...</option>--}}
-                                {{--                                    </select>--}}
-                                {{--                                </div>--}}
-                                {{--                                <div class="col-md-2">--}}
-                                {{--                                    <label for="inputZip" class="form-label">Zip</label>--}}
-                                {{--                                    <input type="text" class="form-control" id="inputZip">--}}
-                                {{--                                </div>--}}
-                                {{--                                <div class="col-12">--}}
-                                {{--                                    <div class="form-check">--}}
-                                {{--                                        <input class="form-check-input" type="checkbox" id="gridCheck">--}}
-                                {{--                                        <label class="form-check-label" for="gridCheck">--}}
-                                {{--                                            Check me out--}}
-                                {{--                                        </label>--}}
-                                {{--                                    </div>--}}
-                                {{--                                </div>--}}
-                                <div class="text-center">
-                                    <button type="submit" class="btn btn-primary">Lưu thông tin</button>
-                                    <button type="reset" class="btn btn-secondary">Đặt lại</button>
-                                </div>
                             </div>
                         </div>
 
                     </div>
 
-                    <div class="col-4">
+                    <div class="col-md-4">
                         <div class="card">
                             <div class="card-body">
 
@@ -125,12 +116,22 @@
 
                                 <div class="col-md mb-3">
                                     <label for="thumbnail" class="form-label">Ảnh thumbnail</label>
-                                    <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*">
+                                    <input type="file" class="form-control @error('thumbnail') is-invalid @enderror" id="thumbnail" name="thumbnail" accept="image/*">
+                                    @error('thumbnail')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <!-- Ảnh preview với nút xóa nổi -->
+                                    <div id="image_preview_wrapper" class="position-relative img-thumbnail mt-3 mb-3" style="max-width: 200px; height: 200px">
+                                        <img alt="" id="image_preview" src="#" class="img-thumbnail d-none" style="width: 100%; height: auto;">
+                                        <button type="button" id="remove_image_btn" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 d-none" title="Xóa ảnh">
+                                            &times;
+                                        </button>
+                                    </div>
                                 </div>
 
                                 <div class="col-md mb-3">
-                                    <label for="thumbnail" class="form-label">Thư viện ảnh</label>
-                                    <input type="file" class="form-control" id="thumbnail" name="thumbnail" accept="image/*" multiple>
+                                    <label for="gallery" class="form-label">Thư viện ảnh</label>
+                                    <input type="file" class="form-control" id="gallery" name="gallery[]" accept="image/*" multiple>
                                 </div>
                             </div>
                         </div> <!-- End Add product images -->
@@ -155,11 +156,43 @@
                             </div>
                         </div> <!-- End SEO -->
                     </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Lưu thông tin</button>
+                        <button type="reset" class="btn btn-secondary">Đặt lại</button>
+                    </div>
                 </div>
             </form><!-- End Multi Columns Form -->
         </section>
 
     </main><!-- End #main -->
+    <script>
+        const imageInput = document.getElementById('thumbnail');
+        const preview = document.getElementById('image_preview');
+        const removeBtn = document.getElementById('remove_image_btn');
+        const wrapper = document.getElementById('image_preview_wrapper');
+
+        imageInput.addEventListener('change', function () {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                    preview.classList.remove('d-none');
+                    removeBtn.classList.remove('d-none');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        removeBtn.addEventListener('click', function () {
+            preview.src = '#';
+            preview.classList.add('d-none');
+            removeBtn.classList.add('d-none');
+            imageInput.value = ''; // Clear file input
+        });
+    </script>
+
 @endsection
 
 @extends('admin.components.footer')
