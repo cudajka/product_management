@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Thêm danh mục')
+@section('title', 'Cập nhật danh mục: '.$editProductCategory->name)
 
 @extends('admin.components.header')
 
@@ -10,12 +10,12 @@
     <main id="main" class="main">
 
         <div class="pagetitle">
-            <h1>Thêm danh mục</h1>
+            <h1>Cập nhật danh mục</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{route('admin.index')}}">Trang chủ</a></li>
-                    {{--                    <li class="breadcrumb-item">Forms</li>--}}
-                    <li class="breadcrumb-item active">Thêm danh mục</li>
+                    <li class="breadcrumb-item"><a href="{{route('product_categories.index')}}">Danh sách danh mục</a></li>
+                    <li class="breadcrumb-item active">Cập nhật danh mục</li>
                 </ol>
             </nav>
         </div><!-- End Page Title -->
@@ -37,19 +37,36 @@
                                     <input type="text" class="form-control" id="name" name="name"
                                            value="{{$editProductCategory->name}}">
                                 </div>
-                                <label for="parent_id" class="form-label">Danh mục cha</label>
-                                <div class="col">
-                                    <select class="form-select" aria-label="" name="parent_id">
-                                        <option value="0" {{($editProductCategory->parent_id) == 0 ? "selected" : ""}}>
-                                            -- Không có --
-                                        </option>
-                                        @foreach($productCategories as $key => $value)
-                                            <option value="{{$value->id}}" {{($editProductCategory->parent_id) == $value->id ? "selected" : ""}}>
-                                                {{$value->name}}
-                                            </option>
-                                        @endforeach
+                                <div class="col-md-6">
+                                    @php
+                                        function showCategoriesForEdit($categories, $currentCategory, $selectedId = null, $parent_id = 0, $prefix = '') {
+                                            foreach ($categories as $cat) {
+                                                if ($cat->parent_id == $parent_id && $cat->id != $currentCategory->id) {
+                                                    $selected = $selectedId == $cat->id ? 'selected' : '';
+                                                    echo "<option value='{$cat->id}' {$selected}>{$prefix}{$cat->name}</option>";
+                                                    showCategoriesForEdit($categories, $currentCategory, $selectedId, $cat->id, $prefix . '---- ');
+                                                }
+                                            }
+                                        }
+                                    @endphp
+                                    <label for="parent_id" class="form-label">Danh mục cha</label>
+                                    <select name="parent_id" class="form-select">
+                                        <option value="0" {{ $editProductCategory->parent_id == 0 ? 'selected' : '' }}>-- Không có danh mục cha --</option>
+                                        @php showCategoriesForEdit($productCategories, $editProductCategory, $editProductCategory->parent_id); @endphp
                                     </select>
+
+                                    {{--                                    <select class="form-select" aria-label="" name="parent_id">--}}
+{{--                                        <option value="0" {{($editProductCategory->parent_id) == 0 ? "selected" : ""}}>--}}
+{{--                                            -- Không có ----}}
+{{--                                        </option>--}}
+{{--                                        @foreach($productCategories as $key => $value)--}}
+{{--                                            <option value="{{$value->id}}" {{($editProductCategory->parent_id) == $value->id ? "selected" : ""}}>--}}
+{{--                                                {{$value->name}}--}}
+{{--                                            </option>--}}
+{{--                                        @endforeach--}}
+{{--                                    </select>--}}
                                 </div>
+
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Lưu thông tin</button>
                                     <button type="reset" class="btn btn-secondary">Đặt lại</button>

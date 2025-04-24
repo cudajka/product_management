@@ -77,7 +77,7 @@ class ProductController extends Controller
             foreach ($request->file('gallery') as $file){
                 $path = $file->store('images/product_images', 'public');
                 ProductImage::create([
-                   'product_id' => $newProduct->id,
+                    'product_id' => $newProduct->id,
                     'image_path' => $path,
                 ]);
             }
@@ -131,6 +131,7 @@ class ProductController extends Controller
         $editProduct->brand_id = $request->input('brand_id');
         $editProduct->description = $request->input('description');
 
+        //Xóa ảnh thumbnail
         if ($request->hasFile('thumbnail')) {
             // Xóa ảnh cũ nếu có
             if ($editProduct->thumbnail && Storage::disk('public')->exists($editProduct->thumbnail)) {
@@ -158,6 +159,32 @@ class ProductController extends Controller
 //            $path = $request->file('thumbnail')->store('images', 'public');
 //            $editProduct->image_path = $path;
 //        }
+
+        //Xóa thư viện ảnh
+
+        // Xoá ảnh cũ nếu người dùng chọn xoá
+        if ($request->filled('delete_old_images')) {
+            $idsToDelete = json_decode($request->input('delete_old_images'), true);
+            foreach ($idsToDelete as $imageId) {
+                $image = ProductImage::find($imageId);
+                if ($image && Storage::disk('public')->exists($image->image_path)) {
+                    Storage::disk('public')->delete($image->image_path);
+                }
+                ProductImage::destroy($imageId);
+            }
+        }
+
+        // Thêm ảnh mới
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $file) {
+                $path = $file->store('product_images', 'public');
+
+                ProductImage::create([
+                    'product_id' => $editProduct->id,
+                    'image_path' => $path
+                ]);
+            }
+        }
 
         $editProduct->save();
 

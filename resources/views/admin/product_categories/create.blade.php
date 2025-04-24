@@ -37,14 +37,28 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label for="parent_id" class="form-label">Danh mục cha</label>
-                                    <div class="col">
-                                        <select class="form-select" aria-label="" name="parent_id">
-                                            <option value="0" selected>-- Không có --</option>
-                                            @foreach($productCategories as $key => $value)
-                                                <option value="{{$value->id}}">{{$value->name}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+{{--                                        <select class="form-select" aria-label="" name="parent_id">--}}
+{{--                                            <option value="0" selected>-- Không có --</option>--}}
+{{--                                            @foreach($productCategories as $key => $value)--}}
+{{--                                                <option value="{{$value->id}}">{{$value->name}}</option>--}}
+{{--                                            @endforeach--}}
+{{--                                        </select>--}}
+
+                                    @php
+                                        function showCategories($productCategories, $parent_id = 0, $prefix = '') {
+                                            foreach ($productCategories as $productCategory) {
+                                                if ($productCategory->parent_id == $parent_id) {
+                                                    echo '<option value="'.$productCategory->id.'">'.$prefix.$productCategory->name.'</option>';
+                                                    showCategories($productCategories, $productCategory->id, $prefix.'---- ');
+                                                }
+                                            }
+                                        }
+                                    @endphp
+
+                                    <select name="category_id" class="form-select">
+                                        <option value="0" selected>-- Không có --</option>
+                                        @php showCategories($productCategories); @endphp
+                                    </select>
                                 </div>
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">Lưu thông tin</button>

@@ -48,6 +48,7 @@
                                         <col style="width: 8%;">
                                         <col style="width: auto;">
                                         <col style="width: auto;">
+                                        <col style="width: auto">
                                         <col style="width: 7%;">
                                     </colgroup>
                                     <thead>
@@ -60,6 +61,7 @@
                                         <th scope="col">Thương hiệu</th>
                                         <th scope="col">Mô tả</th>
                                         <th scope="col">Thumbnail</th>
+                                        <th scope="col">Thư viện ảnh</th>
                                         <th scope="col">Hành động</th>
                                     </tr>
                                     </thead>
@@ -74,18 +76,54 @@
                                             <td>{{$product->brand?->name}}</td>
                                             <td>{!! $product->description !!}</td>
                                             <td>
-                                                <div class="img-thumbnail" style="width: 150px; height: 150px">
-                                                    <img class="img-thumbnail" src="{{ asset('storage/' . $product->thumbnail) }}"  alt="">
+                                                <div class="" style="width: 150px; height: 150px">
+                                                    @if($product->thumbnail)
+                                                        <img class="img-thumbnail" src="{{asset('storage/'.$product->thumbnail)}}"  alt="">
+                                                    @else
+                                                        <i class="bx bxs-file-image text-danger"></i>
+                                                    @endif
+{{--                                                    <img class="img-thumbnail" src="{{asset('storage/'.$product->thumbnail)}}"  alt="">--}}
                                                 </div>
-{{--                                                <img class="img-thumbnail" src="{{ asset('storage/' . $product->thumbnail) }}"  alt="">--}}
+                                            </td>
+                                            <td>
+                                                <div class="" style="width: 150px; height: 150px">
+                                                    @if ($product->images->count())
+                                                        <div id="carousel-{{$product->id}}" class="carousel slide" data-bs-ride="carousel">
+                                                            <div class="carousel-inner">
+                                                                @foreach ($product->images as $index => $image)
+                                                                    <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                                                        <img src="{{ asset('storage/' . $image->image_path) }}"
+                                                                             class="img-thumbnail"
+                                                                             alt="Ảnh sản phẩm">
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                            @if ($product->images->count() > 1)
+                                                                <button class="carousel-control-prev" type="button" data-bs-target="#carousel-{{ $product->id }}" data-bs-slide="prev">
+                                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                                </button>
+                                                                <button class="carousel-control-next" type="button" data-bs-target="#carousel-{{ $product->id }}" data-bs-slide="next">
+                                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                                </button>
+                                                            @endif
+                                                        </div>
+                                                    @else
+                                                        <i class="bx bxs-file-image text-danger"></i>
+                                                    @endif
+                                                </div>
                                             </td>
                                             <td>
                                                 <div class="d-inline-flex">
-                                                    <a href="{{route('products.edit', ['product'=>$product->id])}}"
+                                                    <a href="{{route('products.show', ['product'=>$product->id])}}"
                                                        class="d-inline-block btn text-success"><i
-                                                            class="bx bxs-edit-alt"></i></a>
+                                                            class="bx bxs-show"></i>
+                                                    </a>
+                                                    <a href="{{route('products.edit', ['product'=>$product->id])}}"
+                                                       class="d-inline-block btn text-warning"><i
+                                                            class="bx bxs-edit-alt"></i>
+                                                    </a>
                                                     <form
-                                                        action="{{ route('products.destroy', ['product' => $product->id]) }}"
+                                                        action="{{route('products.destroy', ['product' => $product->id])}}"
                                                         method="POST"
                                                         onsubmit="return confirm('Bạn có muốn xóa không?')">
                                                         @csrf

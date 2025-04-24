@@ -23,15 +23,15 @@ class ProductCategory extends Model
     const UPDATED_AT = 'updated_at';
     public function products(): HasMany
     {
-        return $this->hasMany(Product::class, 'category_id', 'id');
+        return $this->hasMany(Product::class, 'category_id');
     }
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(ProductCategory::class, 'parent_id', 'id');
+        return $this->belongsTo(ProductCategory::class, 'parent_id');
     }
 
     public function children(): HasMany
     {
-        return $this->hasMany(ProductCategory::class, 'parent_id', 'id');
+        return $this->hasMany(ProductCategory::class, 'parent_id');
     }
 }

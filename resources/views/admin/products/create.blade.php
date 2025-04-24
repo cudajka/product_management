@@ -73,13 +73,28 @@
                                     <div class="row mb-3">
                                         <label for="category_id" class="col-sm-2 col-form-label">Loại sản phẩm</label>
                                         <div class="col-sm-10">
-                                            <select class="form-select" aria-label="Default select example"
-                                                    name="category_id">
-                                                @foreach($productCategories as $key => $productCategory)
-                                                    <option value="{{$productCategory->id}}">{{$productCategory->name}}</option>
-                                                @endforeach
+{{--                                            <select class="form-select" aria-label="Default select example" name="category_id">--}}
+{{--                                                @foreach($productCategories as $key => $productCategory)--}}
+{{--                                                    <option value="{{$productCategory->id}}">{{$productCategory->name}}</option>--}}
+{{--                                                @endforeach--}}
+{{--                                            </select>--}}
+                                            @php
+                                                function showCategories($productCategories, $parent_id = 0, $prefix = '') {
+                                                    foreach ($productCategories as $productCategory) {
+                                                        if ($productCategory->parent_id == $parent_id) {
+                                                            echo '<option value="'.$productCategory->id.'">'.$prefix.$productCategory->name.'</option>';
+                                                            showCategories($productCategories, $productCategory->id, $prefix.'---- ');
+                                                        }
+                                                    }
+                                                }
+                                            @endphp
+
+                                            <select name="category_id" class="form-select">
+                                                <option value="">-- Chọn danh mục --</option>
+                                                @php showCategories($productCategories); @endphp
                                             </select>
                                         </div>
+
                                     </div>
                                     <div class="row mb-3">
                                         <label for="brand_id" class="col-sm-2 col-form-label">Thương hiệu</label>
@@ -121,7 +136,7 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                     <!-- Ảnh preview với nút xóa nổi -->
-                                    <div id="image_preview_wrapper" class="position-relative img-thumbnail mt-3 mb-3" style="max-width: 200px; height: 200px">
+                                    <div id="image_preview_wrapper" class="position-relative mt-3 mb-3 border border-1 border-dark-subtle rounded-3" style="max-width: 200px; height: 200px">
                                         <img alt="" id="image_preview" src="#" class="img-thumbnail d-none" style="width: 100%; height: auto;">
                                         <button type="button" id="remove_image_btn" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 d-none" title="Xóa ảnh">
                                             &times;
@@ -132,6 +147,12 @@
                                 <div class="col-md mb-3">
                                     <label for="gallery" class="form-label">Thư viện ảnh</label>
                                     <input type="file" class="form-control" id="gallery" name="gallery[]" accept="image/*" multiple>
+
+                                    <button type="button" id="clearGalleryBtn" class="btn btn-outline-danger btn-sm mt-2">Xóa toàn bộ ảnh</button>
+
+                                    <div id="galleryPreview" class="d-flex flex-wrap gap-2 mt-3">
+
+                                    </div>
                                 </div>
                             </div>
                         </div> <!-- End Add product images -->
@@ -166,7 +187,8 @@
         </section>
 
     </main><!-- End #main -->
-    <script>
+
+    <script> //Preview thumbnail image
         const imageInput = document.getElementById('thumbnail');
         const preview = document.getElementById('image_preview');
         const removeBtn = document.getElementById('remove_image_btn');
@@ -192,6 +214,107 @@
             imageInput.value = ''; // Clear file input
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const galleryInput = document.getElementById('gallery');
+            const galleryPreview = document.getElementById('galleryPreview');
+            const clearGalleryBtn = document.getElementById('clearGalleryBtn');
+
+            let galleryFiles = [];
+
+            galleryInput.addEventListener('change', function () {
+                const newFiles = Array.from(galleryInput.files);
+
+                // Thêm ảnh mới vào mảng (giữ ảnh cũ)
+                galleryFiles = galleryFiles.concat(newFiles);
+
+                renderGalleryPreviews();
+                updateInputFiles();
+            });
+
+            function renderGalleryPreviews() {
+                galleryPreview.innerHTML = '';
+                galleryFiles.forEach((file, index) => {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const wrapper = document.createElement('div');
+                        wrapper.classList.add('position-relative');
+
+                        wrapper.innerHTML = `
+                    <img src="${e.target.result}" class="img-thumbnail" style="width: 100px; height: 100px; object-fit: cover;" alt="">
+                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 delete-preview">&times;</button>
+                `;
+
+                        wrapper.querySelector('.delete-preview').addEventListener('click', () => {
+                            galleryFiles.splice(index, 1);
+                            renderGalleryPreviews();
+                            updateInputFiles();
+                        });
+
+                        galleryPreview.appendChild(wrapper);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            function updateInputFiles() {
+                const dataTransfer = new DataTransfer();
+                galleryFiles.forEach(file => dataTransfer.items.add(file));
+                galleryInput.files = dataTransfer.files;
+            }
+
+            if (clearGalleryBtn) {
+                clearGalleryBtn.addEventListener('click', function () {
+                    galleryFiles = [];
+                    galleryPreview.innerHTML = '';
+                    updateInputFiles();
+                });
+            }
+        });
+    </script>
+
+    {{--    <script> // tự code =)))))--}}
+{{--        document.addEventListener('DOMContentLoaded', function (){--}}
+{{--            const galleryInput = document.getElementById('gallery');--}}
+{{--            const galleryPreview = document.getElementById('galleryPreview');--}}
+
+{{--            galleryInput.addEventListener('change', function () {--}}
+{{--                galleryPreview.innerHTML = ''; //xoa preview cu--}}
+{{--                const files = Array.from(galleryInput.files);--}}
+
+{{--                files.forEach((file, index) => {--}}
+{{--                    const reader = new FileReader();--}}
+{{--                    reader.onload = function (e){--}}
+{{--                        const wrapper = document.createElement('div');--}}
+{{--                        wrapper.classList.add('position-relative');--}}
+
+{{--                        wrapper.innerHTML = `--}}
+{{--                    <img src="${e.target.result}" alt="preview" class="rounded" style="width: 120px; height: 120px; object-fit: cover;">--}}
+{{--                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 rounded-circle delete-preview" style="transform: translate(50%, -50%);">&times;</button>--}}
+{{--                `;--}}
+
+{{--                        //--}}
+{{--                        wrapper.querySelector('.delete-preview').addEventListener('click', () => {--}}
+{{--                            files.splice(index, 1);--}}
+{{--                            updateInputFiles(files);--}}
+{{--                            wrapper.remove();--}}
+{{--                        })--}}
+
+{{--                        galleryPreview.appendChild(wrapper);--}}
+{{--                    };--}}
+{{--                    reader.readAsDataURL(file);--}}
+{{--                });--}}
+
+{{--                //--}}
+{{--                function updateInputFiles(newFiles) {--}}
+{{--                    const dataTransfer = new DataTransfer();--}}
+{{--                    newFiles.forEach(file => dataTransfer.items.add(file));--}}
+{{--                    galleryInput.files = dataTransfer.files;--}}
+{{--                }--}}
+{{--            });--}}
+{{--        });--}}
+{{--    </script>--}}
 
 @endsection
 

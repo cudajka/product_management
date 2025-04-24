@@ -34,8 +34,7 @@
                                 <div class="col-md-6">
                                     <label for="product_id" class="form-label">Sản phẩm</label>
                                     <div class="col">
-                                        <select class="form-select" id="product_id" aria-label="Default select example"
-                                                name="product_id">
+                                        <select class="form-select" id="product_id" aria-label="Default select example" name="product_id">
                                             @foreach($products as $key => $product)
                                                 <option value="{{$product->id}}">{{$product->name}}</option>
                                             @endforeach
