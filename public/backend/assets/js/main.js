@@ -33,7 +33,7 @@
   }
 
   /**
-   * Easy on scroll event listener 
+   * Easy on scroll event listener
    */
   const onscroll = (el, listener) => {
     el.addEventListener('scroll', listener)
@@ -300,26 +300,60 @@
   /**
    * Initiate Datatables
    */
-  const datatables = select('.datatable', true)
-  datatables.forEach(datatable => {
-    new simpleDatatables.DataTable(datatable, {
-      perPageSelect: [5, 10, 15, ["All", -1]],
-      columns: [{
-          select: 2,
-          sortSequence: ["desc", "asc"]
-        },
-        {
-          select: 3,
-          sortSequence: ["desc"]
-        },
-        {
-          select: 4,
-          cellClass: "green",
-          headerClass: "red"
-        }
-      ]
-    });
-  })
+  // const datatables = select('.datatable', true)
+  // datatables.forEach(datatable => {
+  //   new simpleDatatables.DataTable(datatable, {
+  //     perPageSelect: [5, 10, 15, ["All", -1]],
+  //     columns: [{
+  //         select: 2,
+  //         sortSequence: ["desc", "asc"]
+  //       },
+  //       {
+  //         select: 3,
+  //         sortSequence: ["desc"]
+  //       },
+  //       {
+  //         select: 4,
+  //         cellClass: "green",
+  //         headerClass: "red"
+  //       }
+  //     ]
+  //   });
+  // })
+  // $(document).ready(function() {
+  //     $('#productTable').DataTable({
+  //         order: [],
+  //         lengthMenu: [5, 10, 15, 20, { label: 'Tất cả', value: -1 } ],
+  //         columnDefs: [
+  //             { orderable: false, targets: [0, 2, -1] }, // Không cho sắp xếp cột checkbox và cột thao tác
+  //             { targets: '_all', orderSequence: ['asc', 'desc'] }
+  //         ],
+  //         language: {
+  //             "decimal":        "",
+  //             "emptyTable":     "Không có dữ liệu có sẵn trong bảng",
+  //             "info":           "Hiển thị _START_ đến _END_ trong _TOTAL_ mục",
+  //             "infoEmpty":      "Hiển thị 0 đến 0 trong 0 mục",
+  //             "infoFiltered":   "(được lọc từ tổng số _MAX_ mục nhập)",
+  //             "infoPostFix":    "",
+  //             "thousands":      ",",
+  //             "lengthMenu":     "Hiển thị _MENU_ mục",
+  //             "loadingRecords": "Đang tải...",
+  //             "processing":     "",
+  //             "search":         "Tìm kiếm:",
+  //             "zeroRecords":    "Không tìm thấy kết quả phù hợp",
+  //             // "paginate": {
+  //             //     "first":      "Đầu",
+  //             //     "last":       "Cuối",
+  //             //     "next":       "Tiếp",
+  //             //     "previous":   "Trước"
+  //             // },
+  //             "aria": {
+  //                 "orderable":  "Sắp xếp theo cột này",
+  //                 "orderableReverse": "Đảo ngược thứ tự cột này"
+  //             }
+  //         }
+  //     });
+  // });
 
   /**
    * Autoresize echart charts

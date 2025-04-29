@@ -9,9 +9,10 @@ use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\SizeController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//Route::get('/', function () {
+//    return view('welcome');
+//});
+Route::get('/', function () {return view('users.home.index');});
 
 //Vào dashboard
 Route::get('admin', [DashboardController::class, 'index'])->name('admin.index');
@@ -35,3 +36,5 @@ Route::prefix('admin/products-manager/')->group(function () {
     Route::resource('product_variants', ProductVariantController::class);
 
 });
+
+Route::delete('admin/mass-delete', [ProductController::class, 'massDelete'])->name('products.massDelete');

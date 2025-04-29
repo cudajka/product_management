@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Brand;
+use App\Models\Color;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductImage;
+use App\Models\Size;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\RedirectResponse;
@@ -16,9 +18,93 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('productCategory', 'brand')->orderBy('id', 'desc')->paginate(10);
+//        $products = Product::with('productCategory', 'brand')->orderBy('id', 'desc')->get();
+
+        $query = Product::query()->with(['productCategory', 'brand']); // eager load tránh N+1
+
+//        // 1. Tìm kiếm theo tên sản phẩm
+//        if ($request->filled('search')) {
+//            $query->where('name', 'like', '%' . $request->search . '%');
+//        }
+//
+//        // 2. Tìm kiếm thêm theo danh mục (theo tên danh mục)
+//        if ($request->filled('search')) {
+//            $query->whereHas('productCategory', function($q) use ($request) {
+//                $q->where('name', 'like', '%' . $request->search . '%');
+//            });
+//        }
+//
+//        // 3. Tìm kiếm thêm theo thương hiệu (theo tên thương hiệu)
+//        if ($request->filled('search')) {
+//            $query->whereHas('brand', function($q) use ($request) {
+//                $q->where('name', 'like', '%' . $request->search . '%');
+//            });
+//        }
+
+        if ($request->filled('search')) {
+            $keyword = $request->search;
+
+            $query->where(function($q) use ($keyword) {
+                $q->where('name', 'like', '%' . $keyword . '%') // Tên sản phẩm
+                ->orWhereHas('productCategory', function($q2) use ($keyword) {
+                    $q2->where('name', 'like', '%' . $keyword . '%'); // Tên danh mục
+                })->orWhereHas('brand', function($q3) use ($keyword) {
+                        $q3->where('name', 'like', '%' . $keyword . '%'); // Tên thương hiệu
+                    });
+            });
+        }
+
+        // 4. Sắp xếp
+//        $sortBy = $request->get('sort_by', 'created_at');
+//        $sortDir = $request->get('sort_dir', 'desc');
+//
+//        if (in_array($sortBy, ['name', 'price', 'created_at'])) {
+//            $query->orderBy($sortBy, $sortDir);
+//        } elseif ($sortBy == 'productCategory') {
+//            $query->join('product_categories', 'products.category_id', '=', 'product_categories.id')
+//                ->orderBy('product_categories.name', $sortDir)
+//                ->select('products.*'); // nhớ select lại products.*
+//        } elseif ($sortBy == 'brand') {
+//            $query->join('brands', 'products.brand_id', '=', 'brands.id')
+//                ->orderBy('brands.name', $sortDir)
+//                ->select('products.*');
+//        }
+
+        // Xử lý sort
+        if ($sortBy = $request->sort_by) {
+            if (in_array($sortBy, ['id', 'name', 'price'])) {
+                $query->orderBy($sortBy, $request->sort_dir == 'desc' ? 'desc' : 'asc');
+            } elseif ($sortBy == 'productCategory') {
+                $query->join('product_categories', 'products.category_id', '=', 'product_categories.id')
+                    ->orderBy('product_categories.name', $request->sort_dir == 'desc' ? 'desc' : 'asc')
+                    ->select('products.*');
+            } elseif ($sortBy == 'brand') {
+                $query->join('brands', 'products.brand_id', '=', 'brands.id')
+                    ->orderBy('brands.name', $request->sort_dir == 'desc' ? 'desc' : 'asc')
+                    ->select('products.*');
+            }
+        } else {
+            $query->orderBy('id', 'desc');
+        }
+
+        // 5. Phân trang
+//        $perPage = $request->get('per_page', 5); // mặc định 10
+
+//        if ($perPage == 'all') {
+//            $products = $query->get(); // lấy tất cả, không phân trang
+//        } else {
+//            $products = $query->paginate((int) $perPage)->appends($request->query());
+//        }
+        $perPage = $request->per_page == 'all' ? null : (int) ($request->per_page ?? 5);
+        $products = $perPage ? $query->paginate($perPage)->appends($request->query()) : $query->get();
+
+        //
+
+        if ($request->ajax()) {
+            return view('admin.products._table', compact('products'))->render();
+        }
 
         return view('admin.products.index', compact('products'));
     }
@@ -30,7 +116,9 @@ class ProductController extends Controller
     {
         $productCategories = ProductCategory::all();
         $brands = Brand::all();
-        return view('admin.products.create', compact('productCategories', 'brands'));
+        $colors = Color::all();
+        $sizes = Size::all();
+        return view('admin.products.create', compact('productCategories', 'brands', 'colors', 'sizes'));
     }
 
     /**
@@ -201,4 +289,18 @@ class ProductController extends Controller
         $deleteProduct->delete();
         return redirect()->route('products.index')->with('success', 'The product has been deleted.');
     }
+
+    public function massDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        if (empty($ids)) {
+            return redirect()->route('products.index')->with('error', 'Vui lòng chọn ít nhất một sản phẩm để xóa.');
+        }
+
+        Product::whereIn('id', $ids)->delete();
+
+        return redirect()->route('products.index')->with('success', 'Đã xóa các sản phẩm đã chọn.');
+    }
+
 }

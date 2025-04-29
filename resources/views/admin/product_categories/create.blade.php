@@ -28,12 +28,14 @@
                             <h5 class="card-title">Thêm danh mục</h5>
 
                             <!-- Multi Columns Form -->
-                            <form action="{{route('product_categories.store')}}" class="row g-3" method="post"
-                                  enctype="multipart/form-data">
+                            <form action="{{route('product_categories.store')}}" class="row g-3" method="post" enctype="multipart/form-data" novalidate>
                                 @csrf
                                 <div class="col-md-6">
                                     <label for="name" class="form-label">Tên danh mục</label>
-                                    <input type="text" class="form-control" id="name" name="name">
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name">
+                                    @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
                                 </div>
                                 <div class="col-md-6">
                                     <label for="parent_id" class="form-label">Danh mục cha</label>
@@ -55,7 +57,7 @@
                                         }
                                     @endphp
 
-                                    <select name="category_id" class="form-select">
+                                    <select name="parent_id" class="form-select">
                                         <option value="0" selected>-- Không có --</option>
                                         @php showCategories($productCategories); @endphp
                                     </select>
