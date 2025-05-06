@@ -34,11 +34,11 @@
                         <div class="card">
                             <div class="card-body">
 
-                                <div class="row">
-                                    <div class="col-md-6">
+                                <div class="row justify-content-between">
+                                    <div class="col-lg-6 col-md-6 col-sm-12">
                                         <h5 class="card-title">Danh sách sản phẩm</h5>
                                     </div>
-                                    <div class="col-md-6 p-3">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 p-3">
                                         <div class="d-flex justify-content-end">
                                             <span id="selectedCountText"></span>
                                             <!-- Nút bấm mở modal xác nhận -->
@@ -50,38 +50,41 @@
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-md-6 mt-2 mb-2">
-                                        <div class="d-flex">
-                                            <form method="GET" action="{{ route('products.index') }}" class="d-flex align-items-center">
-                                                <label for="per_page" class="me-2">Hiển thị</label>
+                                <div class="row justify-content-between">
+{{--                                    <div class="col-md-6 mt-2 mb-2">--}}
+{{--                                            <form method="GET" action="{{ route('products.index') }}" class="d-flex align-items-center">--}}
+{{--                                                <label for="per_page" class="me-2">Hiển thị</label>--}}
 {{--                                                <select name="per_page" id="per_page" class="form-select w-auto" onchange="this.form.submit()">--}}
 {{--                                                    <option value="5" {{ request('per_page') == 5 ? 'selected' : '' }}>5</option>--}}
 {{--                                                    <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>--}}
 {{--                                                    <option value="15" {{ request('per_page') == 15 ? 'selected' : '' }}>15</option>--}}
 {{--                                                    <option value="all" {{ request('per_page') == 'all' ? 'selected' : '' }}>Tất cả</option>--}}
 {{--                                                </select>--}}
-                                                <select id="per_page" class="form-select w-auto">
-                                                    <option value="5" selected>5</option>
-                                                    <option value="10">10</option>
-                                                    <option value="15">15</option>
-                                                    <option value="all">Tất cả</option>
-                                                </select>
-                                                <span class="ms-2 me-2">dòng trên 1 trang</span>
-                                            </form>
+{{--                                                <span class="ms-2 me-2">dòng trên 1 trang</span>--}}
+{{--                                            </form>--}}
 
-                                            <div class="col-md">
+{{--                                        <div class="col-md">--}}
 {{--                                                <a href="{{ route('products.index') }}" class="btn btn-secondary ms-2"><i class="bx bx-refresh"></i></a>--}}
-                                                <button id="btn_reload" class="btn btn-secondary"><i class="bx bx-refresh"></i></button>
-                                            </div>
-                                        </div>
+{{--                                            <button id="btn_reload" class="btn btn-secondary"><i class="bx bx-refresh"></i></button>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+                                    <div class="col-lg-3 col-md-6 col-sm-12 mb-2 mt-2">
+                                        Hiển thị:
+                                        <select name="per_page" id="per_page" class="form-select w-auto d-inline-block">
+                                            <option value="5" selected>5</option>
+                                            <option value="10">10</option>
+                                            <option value="15">15</option>
+                                            <option value="all">Tất cả</option>
+                                        </select>
+                                        dòng/trang
+                                        <button id="btn_reload" class="btn btn-secondary"><i class="bx bx-refresh"></i></button>
                                     </div>
-                                    <div class="col-md-6 mt-2 mb-2">
+                                    <div class="col-lg-3 col-md-6 col-sm-12 mt-2 mb-2">
                                         <!-- Form tìm kiếm -->
 {{--                                        <form method="GET" action="{{ route('products.index') }}">--}}
                                             <div class="d-flex flex-row-reverse">
-                                                <div class="input-group w-50">
-                                                    <input type="text" id="search" name="search" value="{{ request('search') }}" class="form-control" placeholder="Tìm sản phẩm...">
+                                                <div class="input-group">
+                                                    <input type="text" id="global-search" name="search" {{--value="{{ request('search') }}"--}} class="form-control" placeholder="Tìm sản phẩm...">
                                                     <button class="btn btn-primary" type="submit">Tìm kiếm</button>
                                                 </div>
                                             </div>
@@ -89,8 +92,7 @@
                                     </div>
                                 </div>
 
-                                <div id="table-container">
-{{--                                    {{$products->links()}}--}}
+                                <div id="table-container" class="table-responsive">
                                     @include('admin.products._table', ['products' => $products])
                                 </div>
 
@@ -111,14 +113,16 @@
             const form = deleteModal.querySelector('#deleteForm');
             form.action = actionUrl;
         });
-    </script> <!-- Truyền id vào modal xóa -->
+    </script> <!-- Truyền id vào modal xóa (xóa 1 sản phẩm khi click vào thùng rác) -->
 
     <script>
         document.getElementById('selectAll').addEventListener('change', function () {
             const checkboxes = document.querySelectorAll('.selectBox');
             checkboxes.forEach(cb => cb.checked = this.checked);
-        }); <!-- JS xử lý phần checkbox sản phầm -->
+        });
+    </script> <!-- JS xử lý phần checkbox chọn tất cả sản phầm -->
 
+    <script>
         document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
             document.getElementById('massDeleteForm').submit();
         }); <!-- JavaScript: khi bấm nút trong modal thì submit form -->
@@ -127,8 +131,8 @@
         const itemCheckboxes = document.querySelectorAll('.selectItem');
         const deleteBtn = document.getElementById('deleteSelectedBtn');
         const selectedCountText = document.getElementById('selectedCountText');
-        const singleDeleteButtons = document.querySelectorAll('.deleteSingleBtn');
-        const totalItems = {{ count($products) }};
+        const singleDeleteButtons = document.querySelectorAll('.deleteSingleBtn'); // Cái này để vô hiệu hóa nút xóa đơn nếu chọn từ 2 sản phẩm trở lên
+        {{--const totalItems = {{ count($products) }};--}}
 
         function updateSelectionState() {
             const selectedItems = document.querySelectorAll('.selectItem:checked').length;
@@ -138,7 +142,8 @@
 
             // Update số lượng chọn
             selectedCountText.textContent = selectedItems > 0
-                ? `Đã chọn ${selectedItems}/${totalItems} sản phẩm`
+                //? `Đã chọn ${selectedItems}/${totalItems} sản phẩm`
+                ? `Đã chọn ${selectedItems} sản phẩm`
                 : '';
 
             // Disable nút xóa từng sản phẩm nếu chọn >=2
@@ -153,32 +158,77 @@
             });
         }
 
-        // Khi check select all
-        selectAllCheckbox.addEventListener('change', function () {
-            itemCheckboxes.forEach(function (checkbox) {
-                checkbox.checked = selectAllCheckbox.checked;
-            });
-            updateSelectionState();
-        });
+        function bindCheckboxEvents() {
+            const selectAllCheckbox = document.getElementById('selectAll');
+            const itemCheckboxes = document.querySelectorAll('.selectItem');
 
-        // Khi check từng item
-        itemCheckboxes.forEach(function (checkbox) {
-            checkbox.addEventListener('change', function () {
-                if (!this.checked) {
-                    selectAllCheckbox.checked = false;
-                }
-                else if (document.querySelectorAll('.selectItem:checked').length === itemCheckboxes.length) {
-                    selectAllCheckbox.checked = true;
-                }
-                updateSelectionState();
+            // Gắn sự kiện checkbox từng dòng
+            itemCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    // Nếu có ít nhất 1 checkbox chưa chọn thì bỏ chọn ô tổng
+                    if (!this.checked) {
+                        selectAllCheckbox.checked = false;
+                    } else if (document.querySelectorAll('.selectItem:checked').length === itemCheckboxes.length) {
+                        selectAllCheckbox.checked = true;
+                    }
+                    updateSelectionState();
+                });
             });
-        });
+
+            // Gắn sự kiện checkbox tổng
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', function () {
+                    itemCheckboxes.forEach(cb => cb.checked = this.checked);
+                    updateSelectionState();
+                });
+            }
+
+            // Cập nhật trạng thái ban đầu (số lượng chọn, nút xóa, v.v.)
+            updateSelectionState();
+        }
+
+        function resetCheckboxState() {
+            const selectAllCheckbox = document.getElementById('selectAll');
+            if (selectAllCheckbox) {
+                selectAllCheckbox.checked = false;
+            }
+
+            const itemCheckboxes = document.querySelectorAll('.selectItem');
+            itemCheckboxes.forEach(cb => cb.checked = false);
+
+            updateSelectionState();
+        }
+
+        // // Khi check select all
+        // selectAllCheckbox.addEventListener('change', function () {
+        //     itemCheckboxes.forEach(function (checkbox) {
+        //         checkbox.checked = selectAllCheckbox.checked;
+        //     });
+        //     updateSelectionState();
+        // });
+        //
+        // // Khi check từng item
+        // itemCheckboxes.forEach(function (checkbox) {
+        //     checkbox.addEventListener('change', function () {
+        //         if (!this.checked) {
+        //             selectAllCheckbox.checked = false;
+        //         }
+        //         else if (document.querySelectorAll('.selectItem:checked').length === itemCheckboxes.length) {
+        //             selectAllCheckbox.checked = true;
+        //         }
+        //         updateSelectionState();
+        //     });
+        // });
 
         // Lúc load lần đầu
-        updateSelectionState();
-    </script> <!-- Xử lý xóa tất cả sản phẩm -->
+        // updateSelectionState();
+        bindCheckboxEvents();
 
+        $(document).on('ajaxComplete', function () {
+            bindCheckboxEvents();
+        });
 
+    </script> <!-- Xử lý xóa tất cả sản phẩm sau khi checkbox all -->
 
 {{--    <script>--}}
 {{--        function loadProducts(params = {}) {--}}
@@ -302,14 +352,6 @@
 {{--            });--}}
 {{--        }--}}
 
-{{--    </script>--}}
-
-
-    {{--    <script>--}}
-{{--        document.getElementById('selectAll').addEventListener('change', function () {--}}
-{{--            const checkboxes = document.querySelectorAll('.selectBox');--}}
-{{--            checkboxes.forEach(cb => cb.checked = this.checked);--}}
-{{--        });--}}
 {{--    </script>--}}
 
 @endsection

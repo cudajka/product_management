@@ -247,9 +247,14 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <select name="variants[0][size]" class="form-select">
-                                                        @foreach(['36', '37', '38', '39', '40', '41', '42', '43'] as $size)
-                                                            <option value="{{ $size }}">{{ $size }}</option>
+{{--                                                    <select name="variants[0][size]" class="form-select">--}}
+{{--                                                        @foreach(['36', '37', '38', '39', '40', '41', '42', '43'] as $size)--}}
+{{--                                                            <option value="{{ $size }}">{{ $size }}</option>--}}
+{{--                                                        @endforeach--}}
+{{--                                                    </select>--}}
+                                                    <select name="variants[0][size_id]" class="form-select">
+                                                        @foreach($sizes as $size)
+                                                            <option value="{{ $size->id }}">{{ $size->number }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -436,8 +441,7 @@
         });
     </script> <!--Add product variant -->
 
-
-    {{--    <script> // tự code =)))))--}}
+{{--    <script>--}}
 {{--        document.addEventListener('DOMContentLoaded', function (){--}}
 {{--            const galleryInput = document.getElementById('gallery');--}}
 {{--            const galleryPreview = document.getElementById('galleryPreview');--}}

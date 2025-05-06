@@ -76,72 +76,176 @@
         <!-- Template Main JS File -->
         <script src="{{url('/backend')}}/assets/js/main.js"></script>
 
+{{--        <script>--}}
+{{--            $(document).ready(function () {--}}
+{{--                let currentSortBy = '';--}}
+{{--                let currentSortDir = 'asc';--}}
+
+{{--                function loadProducts(params = {}) {--}}
+{{--                    $('#table-container').html('<div class="text-center my-3"><div class="spinner-border"></div></div>');--}}
+
+{{--                    $.get("{{ route('products.index') }}", params, function(response) {--}}
+{{--                        $('#table-container').html(response);--}}
+{{--                    });--}}
+{{--                }--}}
+
+{{--                function reloadProducts() {--}}
+{{--                    loadProducts({--}}
+{{--                        search: $('#search').val(),--}}
+{{--                        per_page: $('#per_page').val(),--}}
+{{--                        sort_by: currentSortBy,--}}
+{{--                        sort_dir: currentSortDir--}}
+{{--                    });--}}
+{{--                }--}}
+
+{{--                $('#search').on('keyup', function() {--}}
+{{--                    reloadProducts();--}}
+{{--                });--}}
+
+{{--                $('#per_page').on('change', function() {--}}
+{{--                    reloadProducts();--}}
+{{--                });--}}
+
+{{--                $('#btn_reload').on('click', function () {--}}
+{{--                    // Reset các input về mặc định--}}
+{{--                    $('#search').val('');--}}
+{{--                    $('#per_page').val('5'); // hoặc giá trị mặc định bạn dùng--}}
+
+{{--                    // Reset sort nếu có--}}
+{{--                    currentSortBy = '';--}}
+{{--                    currentSortDir = 'asc';--}}
+
+{{--                    // Gọi lại AJAX để load bảng--}}
+{{--                    reloadProducts();--}}
+{{--                });--}}
+
+
+{{--                $(document).on('click', '.pagination a, .sort-link', function(e) {--}}
+{{--                    e.preventDefault();--}}
+
+{{--                    if ($(this).hasClass('sort-link')) {--}}
+{{--                        const sortField = $(this).data('sort');--}}
+{{--                        if (currentSortBy === sortField) {--}}
+{{--                            currentSortDir = currentSortDir === 'asc' ? 'desc' : 'asc';--}}
+{{--                        } else {--}}
+{{--                            currentSortBy = sortField;--}}
+{{--                            currentSortDir = 'asc';--}}
+{{--                        }--}}
+{{--                        reloadProducts();--}}
+{{--                    } else {--}}
+{{--                        const url = $(this).attr('href');--}}
+{{--                        $.get(url, function(response) {--}}
+{{--                            $('#table-container').html(response);--}}
+{{--                        });--}}
+{{--                    }--}}
+{{--                });--}}
+{{--            });--}}
+
+{{--        </script> <!-- JQuery cho các tính năng giống của DataTables -->--}}
+
         <script>
-            $('#btn_reload').on('click', function () {
-                // Reset các input về mặc định
-                $('#search').val('');
-                $('#per_page').val('5'); // hoặc giá trị mặc định bạn dùng
+            let filters = {};
+            let globalSearch = '';
+            let sortBy = 'id';
+            let sortDir = 'desc';
+            // let perPage = $('#per_page').val();
 
-                // Reset sort nếu có
-                currentSortBy = '';
-                currentSortDir = 'asc';
-
-                // Gọi lại AJAX để load bảng
-                reloadProducts();
-            });
-
-            let currentSortBy = '';
-            let currentSortDir = 'asc';
-
-            function loadProducts(params = {}) {
-                // $('#table-container').html('<div class="text-center my-3"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
-
-                $.get("{{ route('products.index') }}", params, function(response) {
-                    $('#table-container').html(response);
-                }).fail(function(xhr) {
-                    console.error(xhr.responseText);
-                });
-            }
-
-            function reloadProducts() {
-                loadProducts({
-                    search: $('#search').val(),
+            function fetchData(page = 1) {
+                const params = {
+                    ...filters,
+                    search: globalSearch,
+                    sort_by: sortBy,
+                    sort_dir: sortDir,
                     per_page: $('#per_page').val(),
-                    sort_by: currentSortBy,
-                    sort_dir: currentSortDir
+                    page: page
+                };
+
+                $.ajax({
+                    url: '{{ route("products.index") }}',
+                    type: 'GET',
+                    data: params,
+                    success: function (res) {
+                        $('#table-body').html($(res).find('#table-body').html());
+                        $('#pagination-links').html($(res).find('#pagination-links').html());
+
+                        {{--const query = new URLSearchParams(params).toString();--}}
+                        {{--history.pushState({}, '', '{{ route("products.index") }}?' + query);--}}
+
+                        // Ẩn hoặc hiện phân trang tùy theo giá trị per_page
+                        if ($('#per_page').val() === 'all') {
+                            $('#pagination-links').hide();
+                        } else {
+                            $('#pagination-links').show();
+                        }
+
+                        updateSortIcons();
+                        bindCheckboxEvents();
+                        resetCheckboxState();
+                    }
                 });
             }
 
-            // Khi gõ tìm kiếm
-            $('#search').on('keyup', function() {
-                reloadProducts();
+            $('#global-search').on('input', function () {
+                globalSearch = $(this).val();
+                fetchData();
             });
 
-            // Khi đổi per_page
-            $('#per_page').on('change', function() {
-                reloadProducts();
+            $('.column-filter').on('input', function () {
+                const name = $(this).data('name');
+                filters[name] = $(this).val();
+                fetchData();
             });
 
-            // Phân trang hoặc sort
-            $(document).on('click', '.pagination a, .sort-link', function(e) {
-                e.preventDefault();
+            $('#per_page').on('change', function () {
+                perPage = $(this).val();
+                fetchData();
+            });
 
-                if ($(this).hasClass('sort-link')) {
-                    const sortField = $(this).data('sort');
-                    if (currentSortBy === sortField) {
-                        currentSortDir = currentSortDir === 'asc' ? 'desc' : 'asc';
-                    } else {
-                        currentSortBy = sortField;
-                        currentSortDir = 'asc';
-                    }
-                    reloadProducts();
+            $('#btn_reload').on('click', function () {
+                filters = {};
+                globalSearch = '';
+                sortBy = 'id';
+                sortDir = 'desc';
+                perPage = $('#per_page').val(5);
+
+                $('.column-filter').val('');
+                $('#global-search').val('');
+                fetchData();
+            });
+
+            $(document).on('click', '#pagination-links a', function (e) {
+                e.preventDefault(); // chặn reload mặc định
+
+                const url = $(this).attr('href');
+                const page = new URLSearchParams(url.split('?')[1]).get('page');
+
+                fetchData(page); // gọi lại AJAX
+            });
+
+            $('#productTable thead tr th[data-sort]').on('click', function () {
+                const clicked = $(this).data('sort');
+                if (sortBy === clicked) {
+                    sortDir = sortDir === 'asc' ? 'desc' : 'asc';
                 } else {
-                    const url = $(this).attr('href');
-                    $.get(url, function(response) {
-                        $('#table-container').html(response);
-                    });
+                    sortBy = clicked;
+                    sortDir = 'asc';
                 }
+                fetchData();
             });
+
+            function updateSortIcons() {
+                $('.sort-icons span').removeClass('active');
+
+                $(`.sort-link[data-sort="${sortBy}"] .sort-icons span`).each(function () {
+                    const isAsc = $(this).text() === '▲';
+                    const isDesc = $(this).text() === '▼';
+
+                    if ((isAsc && sortDir === 'asc') || (isDesc && sortDir === 'desc')) {
+                        $(this).addClass('active');
+                    }
+                });
+            }
+
         </script>
 
     </body>
