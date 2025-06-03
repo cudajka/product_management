@@ -52,7 +52,7 @@
                     <div class="col-lg-3 col md-custom-12">
                         <!-- logo start -->
                         <div class="logo">
-                            <a href="index.html"><img src="{{url('/frontend')}}/img/logo/logo.png" alt=""></a>
+                            <a href="{{route('home')}}"><img src="{{url('/frontend')}}/img/logo/logo.png" alt=""></a>
                         </div>
                         <!-- logo end -->
                     </div>
@@ -177,51 +177,44 @@
                         <div class="main-menu-area">
                             <nav>
                                 <ul>
-                                    <li class="active"><a href="index.html">Home <i class="ion-ios-arrow-down"></i></a>
-                                        <ul class="dropdown_menu">
-                                            <li><a href="index.html">Home Page 1</a></li>
-                                            <li><a href="index-2.html">Home Page 2</a></li>
-                                            <li><a href="index-3.html">Home Page 3</a></li>
-                                            <li><a href="index-4.html">Home Page 4</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">Features<i class="ion-ios-arrow-down"></i></a>
-                                        <ul class="mega-menu">
-                                            <li><a href="#">Shop Page</a>
-                                                <ul>
-                                                    <li><a href="shop.html">Shop Left</a></li>
-                                                    <li><a href="shop-right.html">Shop Right</a></li>
-                                                    <li><a href="shop-fullwidth.html">Shop Full Width</a></li>
-                                                    <li><a href="single-product.html">Single Product</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="#">Blog Page</a>
-                                                <ul>
-                                                    <li><a href="blog.html">Blog Left</a></li>
-                                                    <li><a href="blog-right.html">Blog Right</a></li>
-                                                    <li><a href="blog-fullwidth.html">Blog Full Width</a></li>
-                                                    <li><a href="blog-details.html">Blog Details</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="#">Pages</a>
-                                                <ul>
-                                                    <li><a href="my-account.html">My Account</a></li>
-                                                    <li><a href="frequently-question.html">FAQ</a></li>
-                                                    <li><a href="login-register.html">Login & Register</a></li>
-                                                    <li><a href="error404.html">Error 404</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="#">Column</a>
-                                                <ul>
-                                                    <li><a href="about-us.html">About Us</a></li>
-                                                    <li><a href="checkout.html">Checkout</a></li>
-                                                    <li><a href="cart.html">Cart Page</a></li>
-                                                    <li><a href="wishlist.html">Wish List</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="shop.html">For women <i class="ion-ios-arrow-down"></i></a>
+                                    <li class="active"><a href="{{route('home')}}">Trang chủ</a></li>
+{{--                                    <li><a href="#">Features<i class="ion-ios-arrow-down"></i></a>--}}
+{{--                                        <ul class="mega-menu">--}}
+{{--                                            <li><a href="#">Shop Page</a>--}}
+{{--                                                <ul>--}}
+{{--                                                    <li><a href="shop.html">Shop Left</a></li>--}}
+{{--                                                    <li><a href="shop-right.html">Shop Right</a></li>--}}
+{{--                                                    <li><a href="shop-fullwidth.html">Shop Full Width</a></li>--}}
+{{--                                                    <li><a href="single-product.html">Single Product</a></li>--}}
+{{--                                                </ul>--}}
+{{--                                            </li>--}}
+{{--                                            <li><a href="#">Blog Page</a>--}}
+{{--                                                <ul>--}}
+{{--                                                    <li><a href="blog.html">Blog Left</a></li>--}}
+{{--                                                    <li><a href="blog-right.html">Blog Right</a></li>--}}
+{{--                                                    <li><a href="blog-fullwidth.html">Blog Full Width</a></li>--}}
+{{--                                                    <li><a href="blog-details.html">Blog Details</a></li>--}}
+{{--                                                </ul>--}}
+{{--                                            </li>--}}
+{{--                                            <li><a href="#">Pages</a>--}}
+{{--                                                <ul>--}}
+{{--                                                    <li><a href="my-account.html">My Account</a></li>--}}
+{{--                                                    <li><a href="frequently-question.html">FAQ</a></li>--}}
+{{--                                                    <li><a href="login-register.html">Login & Register</a></li>--}}
+{{--                                                    <li><a href="error404.html">Error 404</a></li>--}}
+{{--                                                </ul>--}}
+{{--                                            </li>--}}
+{{--                                            <li><a href="#">Column</a>--}}
+{{--                                                <ul>--}}
+{{--                                                    <li><a href="about-us.html">About Us</a></li>--}}
+{{--                                                    <li><a href="checkout.html">Checkout</a></li>--}}
+{{--                                                    <li><a href="cart.html">Cart Page</a></li>--}}
+{{--                                                    <li><a href="wishlist.html">Wish List</a></li>--}}
+{{--                                                </ul>--}}
+{{--                                            </li>--}}
+{{--                                        </ul>--}}
+{{--                                    </li>--}}
+                                    <li><a href="shop.html">Danh mục <i class="ion-ios-arrow-down"></i></a>
                                         <ul class="mega-menu mega-menu-2">
                                             <li><a href="#">Jackets</a>
                                                 <ul>
@@ -249,7 +242,7 @@
                                             </li>
                                         </ul>
                                     </li>
-                                    <li><a href="shop.html">Shop</a></li>
+                                    <li><a href="{{route('landing_page.products.index')}}">Cửa hàng</a></li>
                                     <li><a href="blog.html">Blog</a></li>
                                     <li><a href="contact.html">Contact</a></li>
                                 </ul>

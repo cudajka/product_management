@@ -2088,10 +2088,10 @@ body {
 .color-list li a {
   border: 2px solid rgba(0, 0, 0, 0);
   display: block;
-  height: 20px;
+  height: 50px;
   -webkit-transition: all 0.3s ease-in-out 0s;
   transition: all 0.3s ease-in-out 0s;
-  width: 20px;
+  width: 50px;
 }
 .color-list li a.orange {
   background: #f39c11 none repeat scroll 0 0;

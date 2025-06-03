@@ -22,6 +22,7 @@ class Product extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
     const DELETED_AT = 'deleted_at';
+
     public function productCategory(): BelongsTo
     {
         return $this->belongsTo(ProductCategory::class, 'category_id');
@@ -30,16 +31,16 @@ class Product extends Model
     {
         return $this->belongsTo(Brand::class, 'brand_id');
     }
-    public function color(){
-        return $this->belongsToMany(Color::class, 'product_variants');
-    }
-    public function size(){
-        return $this->belongsToMany(Size::class, 'product_variants');
+//    public function colors(){
+//        return $this->belongsToMany(Color::class, 'product_variants')->distinct();
+//    }
+    public function sizes(){
+        return $this->belongsToMany(Size::class, 'product_variants')->distinct();
     }
     public function images(){
         return $this->hasMany(ProductImage::class, 'product_id');
     }
-    public function productVariant(): HasMany
+    public function variants(): HasMany
     {
         return $this->hasMany(ProductVariant::class);
     }

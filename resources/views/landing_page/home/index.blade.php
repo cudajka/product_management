@@ -1,8 +1,8 @@
-@extends('users.layouts.app')
+@extends('landing_page.layouts.app')
 
-@section('title', 'Home || Juta - Ecommerce Bootstrap 5 Template')
+@section('title', 'Trang chủ || Juta - Ecommerce Bootstrap 5 Template')
 
-@extends('users.components.header')
+@extends('landing_page.components.header')
 
 @section('main_content')
     <!-- slider-main-area start -->
@@ -3018,6 +3018,6 @@
     <!-- newsletter-area end -->
 @endsection
 
-@extends('users.components.footer')
+@extends('landing_page.components.footer')
 
-@extends('users.components.modal')
+@extends('landing_page.components.modal')

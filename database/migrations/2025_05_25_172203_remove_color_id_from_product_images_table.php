@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('product_images', function (Blueprint $table) {
-            $table->renameColumn('name', 'image_path');
-            $table->string('url')->nullable()->change();
+//            $table->dropForeign(['color_id']);
+            $table->dropColumn('color_id');
         });
     }
 
@@ -23,8 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('product_images', function (Blueprint $table) {
-            $table->renameColumn('image_path', 'name');
-            $table->string('url')->nullable(false)->change();
+            $table->unsignedBigInteger('color_id')->nullable();
+            $table->foreign('color_id')->references('id')->on('colors')->onDelete('set null');
         });
     }
 };

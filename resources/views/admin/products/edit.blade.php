@@ -6,6 +6,10 @@
 
 @extends('admin.components.sidebar')
 
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
+
 @section('main_content')
     <main id="main" class="main">
 
@@ -108,6 +112,85 @@
                             </div>
                         </div>
 
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Biến thể sản phẩm</h5>
+
+                                <div class="col-md">
+
+                                    <!-- Màu + ảnh theo màu -->
+{{--                                    <div class="col-md mb-3">--}}
+{{--                                        <div id="color-image-rows">--}}
+{{--                                            @foreach($productImagesByColor as $index => $group)--}}
+{{--                                                <div class="color-image-row row mb-3">--}}
+{{--                                                    <div class="col-md-2">--}}
+{{--                                                        <label class="form-label">Màu sắc</label>--}}
+{{--                                                        <select name="color_galleries[{{ $index }}][color_id]" class="form-select">--}}
+{{--                                                            @foreach($colors as $color)--}}
+{{--                                                                <option value="{{ $color->id }}" {{ $color->id == $group['color_id'] ? 'selected' : '' }}>{{ $color->name }}</option>--}}
+{{--                                                            @endforeach--}}
+{{--                                                        </select>--}}
+{{--                                                    </div>--}}
+{{--                                                    <div class="col-md-9">--}}
+{{--                                                        <label class="form-label">Ảnh sản phẩm (nhiều ảnh)</label>--}}
+{{--                                                        <input--}}
+{{--                                                            type="file"--}}
+{{--                                                            name="color_galleries[{{ $index }}][images][]"--}}
+{{--                                                            class="filepond form-control"--}}
+{{--                                                            accept="image/*"--}}
+{{--                                                            multiple--}}
+{{--                                                            data-initial-files='@json($group["images"])'--}}
+{{--                                                        >--}}
+{{--                                                    </div>--}}
+{{--                                                    <div class="col-md-1 d-flex align-items-start">--}}
+{{--                                                        <button type="button" class="btn btn-danger btn-remove-row {{ count($productImagesByColor) <= 1 ? 'disabled' : '' }}"><i class="bx bxs-trash"></i></button>--}}
+{{--                                                    </div>--}}
+{{--                                                </div>--}}
+{{--                                            @endforeach--}}
+{{--                                        </div>--}}
+
+{{--                                        <button type="button" class="btn btn-secondary mb-3" id="btn-add-row">+ Thêm màu</button>--}}
+{{--                                    </div>--}}
+
+                                    {{-- Biến thể (màu + size + tồn kho) --}}
+                                    <div class="mb-3">
+                                        <label class="form-label">Biến thể sản phẩm</label>
+                                        <div id="variant-wrapper">
+                                            <div class="row mb-2 variant-group">
+                                                <div class="col-md-2">
+                                                    <select name="variants[0][color_id]" class="form-select">
+                                                        @foreach($colors as $color)
+                                                            <option value="{{ $color->id }}">{{ $color->name }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    {{--                                                    <select name="variants[0][size]" class="form-select">--}}
+                                                    {{--                                                        @foreach(['36', '37', '38', '39', '40', '41', '42', '43'] as $size)--}}
+                                                    {{--                                                            <option value="{{ $size }}">{{ $size }}</option>--}}
+                                                    {{--                                                        @endforeach--}}
+                                                    {{--                                                    </select>--}}
+                                                    <select name="variants[0][size_id]" class="form-select">
+                                                        @foreach($sizes as $size)
+                                                            <option value="{{ $size->id }}">{{ $size->number }}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-7">
+                                                    <input type="number" name="variants[0][stock]" class="form-control" placeholder="Tồn kho">
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button type="button" class="btn btn-danger remove-variant"><i class="bx bxs-trash"></i></button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="button" id="add-variant" class="btn btn-primary btn-sm">+ Thêm biến thể</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="col-md-4">
@@ -148,9 +231,9 @@
                                             </div>
                                         @endforeach
                                     </div>
-                                </div>
+                                </div> <!-- Thêm ảnh sản phẩm với Preview -->
 
-                                <!-- Ảnh cũ nào bị xóa sẽ được đánh dấu ở đây -->
+{{--                                <!-- Ảnh cũ nào bị xóa sẽ được đánh dấu ở đây -->--}}
                                 <input type="hidden" name="delete_old_images" id="deleteOldImages" value="[]">
                             </div>
                         </div> <!-- End Add product images -->
@@ -175,7 +258,9 @@
                             </div>
                         </div> <!-- End SEO -->
                     </div>
+
                 </div>
+
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">Lưu thông tin</button>
                     <button type="reset" class="btn btn-secondary">Đặt lại</button>
@@ -185,6 +270,9 @@
 
     </main><!-- End #main -->
 
+@endsection
+
+@section('script')
     <script>
         const imageInput = document.getElementById('thumbnail');
         const preview = document.getElementById('image_preview');
@@ -294,6 +382,115 @@
         });
     </script>
 
+    <script>
+        FilePond.registerPlugin(FilePondPluginImagePreview);
+
+        const colors = @json($colors);
+        let rowIndex = {{ count($productImagesByColor) }};
+
+        function initFilePondForInput(input) {
+            const initialFiles = $(input).data('initial-files');
+
+            const pond = FilePond.create(input, {
+                allowMultiple: true,
+                allowReorder: true,
+                allowRemove: true,
+                allowDrop: true,
+                allowImagePreview: true,
+                instantUpload: false,
+                server: {
+                    process: null,
+                    revert: null,
+                }
+            });
+
+            FilePond.setOptions({
+                instantUpload: false,
+                storeAsFile: true // RẤT QUAN TRỌNG để Laravel nhận đúng qua $_FILES
+            });
+
+            $(input).data('pondInstance', pond);
+        }
+
+        document.querySelectorAll('input.filepond').forEach(input => {
+            const initialFilesData = input.dataset.initialFiles;
+            let initialFiles = [];
+
+            try {
+                initialFiles = JSON.parse(initialFilesData || '[]');
+            } catch (e) {
+                console.error('JSON lỗi:', e);
+            }
+
+            FilePond.create(input, {
+                files: initialFiles ? initialFiles.map(img => ({
+                    source: img.url,
+                    options: {
+                        type: 'local',
+                        file: {
+                            name: img.filename,
+                            size: img.size || 123456,
+                        },
+                        metadata: {
+                            id: img.id
+                        }
+                    }
+                })) : [],
+            });
+
+            FilePond.setOptions({
+                instantUpload: false,
+                storeAsFile: true // RẤT QUAN TRỌNG để Laravel nhận đúng qua $_FILES
+            });
+        });
+
+        $(document).ready(function () {
+            $('.filepond').each(function () {
+                initFilePondForInput(this);
+            });
+
+            $('#btn-add-row').on('click', function () {
+                const newRow = `
+                <div class="color-image-row row mb-3">
+                    <div class="col-md-2">
+                        <label class="form-label">Màu sắc</label>
+                        <select name="color_galleries[${rowIndex}][color_id]" class="form-select">
+                            ${colors.map(color => `<option value="${color.id}">${color.name}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="col-md-9">
+                        <label class="form-label">Ảnh sản phẩm (nhiều ảnh)</label>
+                        <input type="file"
+                            name="color_galleries[${rowIndex}][images][]"
+                            class="filepond form-control"
+                            accept="image/*"
+                            multiple
+                            data-index="${rowIndex}">
+                    </div>
+                    <div class="col-md-1 d-flex align-items-start">
+                        <button type="button" class="btn btn-danger btn-remove-row"><i class="bx bxs-trash"></i></button>
+                    </div>
+                </div>
+            `;
+
+                $('#color-image-rows').append(newRow);
+                const newInput = $(`#color-image-rows .color-image-row:last .filepond`);
+                initFilePondForInput(newInput[0]);
+
+                $('.btn-remove-row').prop('disabled', false);
+                rowIndex++;
+            });
+
+            $(document).on('click', '.btn-remove-row', function () {
+                if ($('.color-image-row').length > 1) {
+                    $(this).closest('.color-image-row').remove();
+                    if ($('.color-image-row').length === 1) {
+                        $('.btn-remove-row').prop('disabled', true);
+                    }
+                }
+            });
+        });
+    </script>
 
 @endsection
 

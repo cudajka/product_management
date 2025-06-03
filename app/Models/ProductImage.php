@@ -16,6 +16,6 @@ class ProductImage extends Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
     public function product(){
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class, 'product_id');
     }
 }

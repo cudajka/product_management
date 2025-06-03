@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Color;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductImage;
 use App\Models\Size;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class ProductController extends Controller
@@ -153,12 +154,15 @@ class ProductController extends Controller
      */
     public function store(Request $request) : RedirectResponse
     {
+//        dd($request->all());
          $request->validate([
             'name' => 'required | unique:products',
             'price' => 'required | integer',
             'category_id' => 'required',
             'brand_id' => 'required',
             'thumbnail' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg,webp,avif',
+//            'color_ids' => 'required|array',
+//            'color_ids.*' => 'exists:colors,id',
         ]);
 
         $newProduct = new Product();
@@ -192,13 +196,65 @@ class ProductController extends Controller
         if ($request->hasFile('gallery'))
         {
             foreach ($request->file('gallery') as $file){
-                $path = $file->store('images/product_images', 'public');
+                $path = $file->store("images/product_images/{$newProduct->id}", 'public');
                 ProductImage::create([
                     'product_id' => $newProduct->id,
                     'image_path' => $path,
                 ]);
             }
         }
+
+        // Lưu tồn kho theo size
+        $quantities = $request->input('quantities', []);
+
+        foreach ($quantities as $sizeId => $quantity) {
+            $quantity = (int) $quantity; // ép kiểu
+
+            if ($quantity > 0) {
+                $newProduct->variants()->create([
+                    'size_id' => $sizeId,
+                    'quantity' => $quantity,
+                ]);
+            }
+        }
+
+//        if ($request->color_galleries)
+//        {
+//            $data = [];
+//
+//            foreach ($request->color_galleries as $item){
+//                $color_id = $item['color_id'];
+////                ProductImage::create([
+////                    'product_id' => $newProduct->id,
+////                    'image_path' => $path,
+////                ]);
+//                foreach ($item['images'] as $image){
+//                    $path = $image->store("images/product_images/{$newProduct->id}/color_$color_id", 'public');
+//                    $data[] = [
+//                        'product_id' => $newProduct->id,
+//                        'color_id' => $color_id,
+//                        'image_path' => $path,
+//                    ];
+//                }
+//            }
+////            dd($data);
+//            ProductImage::insert($data);
+//        }
+
+//        // Lưu ảnh theo màu
+//        foreach ($request->color_ids as $index => $colorId) {
+//            if ($request->hasFile("images.$index.files")) {
+//                foreach ($request->file("images.$index.files") as $file) {
+//                    $path = $file->store("images/product_images/{$newProduct->id}/color_$colorId", 'public');
+//
+//                    ProductImage::create([
+//                        'product_id' => $newProduct->id,
+//                        'color_id' => $colorId,
+//                        'image_path' => $path,
+//                    ]);
+//                }
+//            }
+//        }
 
         return redirect()->route('products.index')->with('success', 'The product has been created.');
     }
@@ -219,14 +275,35 @@ class ProductController extends Controller
 //        $product_id = $request->id;
         $productCategories = ProductCategory::all();
         $brands = Brand::all();
+        $colors = Color::all();
+        $sizes = Size::all();
         $editProduct = Product::with('productCategory', 'brand')->find($id);
-        return view('admin.products.edit', compact('editProduct', 'productCategories', 'brands'));
+
+        $productImagesByColor = ProductImage::where('product_id', $editProduct->id)
+            ->get()
+            ->groupBy('color_id')
+            ->map(function ($images, $color_id) {
+                return [
+                    'color_id' => $color_id,
+                    'images' => $images->map(function ($img) {
+                        return [
+                            'id' => $img->id,
+                            'filename' => basename($img->image_path),
+                            'url' => asset('storage/' . $img->image_path),
+                        ];
+                    })->toArray()
+                ];
+            })
+            ->values()
+            ->toArray();
+
+        return view('admin.products.edit', compact('editProduct', 'productCategories', 'brands', 'colors', 'sizes', 'productImagesByColor'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): RedirectResponse
     {
 //        $product_id = $_POST['product_id'];
         $request->validate([
@@ -247,6 +324,8 @@ class ProductController extends Controller
         $editProduct->category_id = $request->input('category_id');
         $editProduct->brand_id = $request->input('brand_id');
         $editProduct->description = $request->input('description');
+
+        $editProduct->save();
 
         //Xóa ảnh thumbnail
         if ($request->hasFile('thumbnail')) {
@@ -294,7 +373,7 @@ class ProductController extends Controller
         // Thêm ảnh mới
         if ($request->hasFile('gallery')) {
             foreach ($request->file('gallery') as $file) {
-                $path = $file->store('product_images', 'public');
+                $path = $file->store("images/product_images/{$editProduct->id}/", 'public');
 
                 ProductImage::create([
                     'product_id' => $editProduct->id,
@@ -303,7 +382,32 @@ class ProductController extends Controller
             }
         }
 
-        $editProduct->save();
+//        if ($request->has('color_galleries')) {
+//            foreach ($request->color_galleries as $productImagesByColor) {
+//                $color_id = $productImagesByColor['color_id'];
+//                $newImages = $productImagesByColor['images'] ?? [];
+//
+//                // 1. XÓA ẢNH ĐƯỢC NGƯỜI DÙNG ĐÁNH DẤU XÓA (nếu có)
+//                $deletedIds = $productImagesByColor['deleted_ids'] ?? [];
+//                if (!empty($deletedIds)) {
+//                    ProductImage::whereIn('id', $deletedIds)->delete();
+//                }
+//
+//                // 2. THÊM ẢNH MỚI (nếu có)
+//                if (!empty($newImages)) {
+//                    foreach ($newImages as $image) {
+//                        $path = $image->store('images/product_images', 'public');
+//                        ProductImage::create([
+//                            'product_id' => $editProduct->id,
+//                            'color_id' => $color_id,
+//                            'image_path' => $path,
+//                        ]);
+//                    }
+//                }
+//
+//                // Không đụng gì thì KHÔNG XÓA và KHÔNG INSERT gì cả
+//            }
+//        }
 
         return redirect()->route('products.index')->with('success', 'The product has been updated.');
     }
@@ -311,15 +415,30 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id): RedirectResponse
     {
 //        $product_id = $request->id;
         $deleteProduct = Product::findOrFail($id);
+
+        if ($deleteProduct->thumbnail && Storage::disk('public')->exists($deleteProduct->thumbnail)) {
+            Storage::disk('public')->delete($deleteProduct->thumbnail);
+        }
+
+        foreach ($deleteProduct->images as $image) {
+            if (Storage::disk('public')->exists($image->image_path)) {
+                Storage::disk('public')->delete($image->image_path);
+            }
+            $image->delete(); // xóa record khỏi DB
+        }
+
+        // 3. Xóa thư mục của sản phẩm luôn (nếu muốn gọn gàng)
+        Storage::disk('public')->deleteDirectory("images/products_images/{$deleteProduct->id}");
+
         $deleteProduct->delete();
         return redirect()->route('products.index')->with('success', 'The product has been deleted.');
     }
 
-    public function massDelete(Request $request)
+    public function massDelete(Request $request): RedirectResponse
     {
         $ids = $request->input('ids');
 

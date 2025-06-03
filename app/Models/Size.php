@@ -9,14 +9,14 @@ class Size extends Model
 {
     use HasFactory;
     protected $table = 'sizes';
-    protected $fillable = [''];
+    protected $fillable = ['name', 'number'];
     public $incrementing = true;
     public $timestamps = true;
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
-    public function products()
+    public function variants()
     {
-        return $this->belongsToMany(Product::class, 'product_variants', 'size_id', 'product_id');
+        return $this->hasMany(ProductVariant::class);
     }
 }

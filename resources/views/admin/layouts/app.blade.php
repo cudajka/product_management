@@ -24,6 +24,9 @@
         <link href="{{url('/backend')}}/assets/vendor/quill/quill.snow.css" rel="stylesheet">
         <link href="{{url('/backend')}}/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
         <link href="{{url('/backend')}}/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+        <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+        <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+        <link href="https://unpkg.com/filepond-plugin-file-poster/dist/filepond-plugin-file-poster.css" rel="stylesheet"/>
 
         <!-- DataTables CSS File -->
     {{--    <link href="{{url('/backend')}}/assets/vendor/simple-datatables/style.css" rel="stylesheet">--}}
@@ -57,13 +60,21 @@
         <!-- Vendor JS Files -->
         <script src="{{url('/backend')}}/assets/vendor/jquery/jquery-3.7.1.min.js"></script>
         <script src="{{url('/backend')}}/assets/vendor/apexcharts/apexcharts.min.js"></script>
-        <script src="{{url('/backend')}}/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
-    {{--    <script src="{{url('/backend')}}/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>--}}
+{{--        <script src="{{url('/backend')}}/assets/vendor/bootstrap/js/bootstrap.min.js"></script>--}}
+        <script src="{{url('/backend')}}/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="{{url('/backend')}}/assets/vendor/chart.js/chart.umd.js"></script>
         <script src="{{url('/backend')}}/assets/vendor/echarts/echarts.min.js"></script>
         <script src="{{url('/backend')}}/assets/vendor/quill/quill.min.js"></script>
         <script src="{{url('/backend')}}/assets/vendor/tinymce/tinymce.min.js"></script>
         <script src="{{url('/backend')}}/assets/vendor/php-email-form/validate.js"></script>
+
+        <!-- Load FilePond library -->
+        <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+        <script src="https://unpkg.com/filepond-plugin-file-poster/dist/filepond-plugin-file-poster.js"></script>
+        <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+
+        <!-- Sortable -->
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 
         <!-- DataTables JS File -->
         {{--    <script src="{{url('/backend')}}/assets/vendor/simple-datatables/simple-datatables.js"></script>--}}
@@ -247,6 +258,8 @@
             }
 
         </script>
+
+        @yield('script')
 
     </body>
 

@@ -19,6 +19,7 @@
                 </ol>
             </nav>
         </div><!-- End Page Title -->
+
         <section class="section">
 {{--            @if ($errors->any())--}}
 {{--                <div class="alert alert-danger">--}}
@@ -31,7 +32,7 @@
 {{--            @endif--}}
             <form action="{{route('products.store')}}" method="post" enctype="multipart/form-data" novalidate>
                 @csrf
-                <div class="row d-flex">
+                <div class="row">
 
                     <div class="col-md-8">
                         <div class="card">
@@ -55,6 +56,15 @@
                                                 <option value="1" selected>Còn hàng</option>
                                                 <option value="0">Hết hàng</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="group" class="col-sm-2 col-form-label">Nhóm sản phẩm</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control @error('group') is-invalid @enderror" id="group" name="group">
+                                            @error('group')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -120,65 +130,6 @@
 
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-
-                                <h5 class="card-title">Ảnh sản phẩm</h5>
-
-                                <div class="col-md mb-3">
-                                    <label for="thumbnail" class="form-label">Ảnh thumbnail</label>
-                                    <input type="file" class="form-control @error('thumbnail') is-invalid @enderror" id="thumbnail" name="thumbnail" accept="image/*">
-                                    @error('thumbnail')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    <!-- Ảnh preview với nút xóa nổi -->
-                                    <div id="image_preview_wrapper" class="position-relative mt-3 mb-3 border border-1 border-dark-subtle rounded-3" style="max-width: 200px; height: 200px">
-                                        <img alt="" id="image_preview" src="#" class="img-thumbnail d-none" style="width: 100%; height: auto;">
-                                        <button type="button" id="remove_image_btn" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 d-none" title="Xóa ảnh">
-                                            &times;
-                                        </button>
-                                    </div>
-                                </div><!-- Thêm ảnh thumbnail với Preview -->
-
-                                <div class="col-md mb-3">
-                                    <label for="gallery" class="form-label">Thư viện ảnh</label>
-                                    <input type="file" class="form-control" id="gallery" name="gallery[]" accept="image/*" multiple>
-
-                                    <button type="button" id="clearGalleryBtn" class="btn btn-outline-danger btn-sm mt-2">Xóa toàn bộ ảnh</button>
-
-                                    <div id="galleryPreview" class="d-flex flex-wrap gap-2 mt-3">
-
-                                    </div>
-                                </div><!-- Thêm ảnh sản phẩm với Preview -->
-
-                                <div class="col-md mb-3">
-                                    {{-- Ảnh theo từng màu --}}
-                                    <div id="color-image-group">
-                                        <div class="row mb-3 color-block">
-                                            <div class="col-md-4">
-                                                <select name="colors[]" class="form-select">
-                                                    <option value="" disabled>-- Chọn màu --</option>
-                                                    @foreach($colors as $color)
-                                                        <option value="{{ $color->id }}">{{ $color->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <input type="file" name="images[][image][]" multiple class="form-control">
-                                            </div>
-                                            <div class="col-md-2">
-                                                <button type="button" class="btn btn-danger remove-color">Xóa</button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </div> <!-- End Add product images -->
 
                         <div class="card">
                             <div class="card-body">
@@ -199,81 +150,112 @@
                                 </div>
                             </div>
                         </div> <!-- End SEO -->
+
                     </div>
 
-                </div>
-
-                <div class="row">
-                    <div class="col-md-8">
+                    <div class="col-md-4">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Biến thể sản phẩm</h5>
+
+                                <h5 class="card-title">Ảnh sản phẩm</h5>
+
+                                <div class="col-md mb-3">
+                                    <label for="thumbnail" class="form-label">Ảnh thumbnail</label>
+                                    <input type="file" class="form-control @error('thumbnail') is-invalid @enderror" id="thumbnail" name="thumbnail" accept="image/*">
+                                    @error('thumbnail')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <!-- Ảnh preview với nút xóa nổi -->
+                                    <div id="image_preview_wrapper" class="position-relative mt-3 mb-3 border border-1 border-dark-subtle rounded-3" style="max-width: 200px; height: 200px">
+                                        <img alt="" id="image_preview" src="#" class="img-thumbnail d-none" style="width: 100%; height: auto;">
+                                        <button type="button" id="remove_image_btn" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 d-none" title="Xóa ảnh">
+                                            <i class="bx bxs-trash"></i>
+                                        </button>
+                                    </div>
+                                </div><!-- Thêm ảnh thumbnail với Preview -->
+
+                                <div class="col-md mb-3">
+                                    <label for="gallery" class="form-label">Thư viện ảnh</label>
+                                    <input type="file" class="form-control" id="gallery" name="gallery[]" accept="image/*" multiple>
+
+                                    <button type="button" id="clearGalleryBtn" class="btn btn-outline-danger btn-sm mt-2">Xóa toàn bộ ảnh</button>
+
+                                    <div id="galleryPreview" class="d-flex flex-wrap gap-2 mt-3"></div>
+
+                                </div> <!-- Thêm ảnh sản phẩm với Preview -->
+
+                            </div>
+                        </div> <!-- End Add product images -->
+
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Số lượng sản phẩm</h5>
 
                                 <div class="col-md">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>Kích thước</th>
+                                                <th>Số lượng</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($sizes as $size)
+                                                <tr>
+                                                    <td>{{ $size->name }}</td>
+                                                    <td>
+                                                        <input type="number" name="quantities[{{ $size->id }}]" min="0" class="form-control" placeholder="0">
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
 
-                                    {{-- Gallery ảnh theo màu --}}
-                                    <div class="mb-3">
-                                        <label class="form-label">Ảnh theo màu</label>
-                                        <div id="color-gallery-wrapper">
-                                            <div class="row mb-2 color-gallery-group">
-                                                <div class="col-md-4">
-                                                    <select name="color_galleries[0][color_id]" class="form-select">
-                                                        @foreach($colors as $color)
-                                                            <option value="{{ $color->id }}">{{ $color->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <input type="file" name="color_galleries[0][images][]" class="form-control" multiple>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <button type="button" class="btn btn-danger remove-gallery">X</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button type="button" id="add-color-gallery" class="btn btn-primary btn-sm">+ Thêm ảnh theo màu</button>
                                     </div>
-
-                                    {{-- Biến thể (màu + size + tồn kho) --}}
-                                    <div class="mb-3">
-                                        <label class="form-label">Biến thể sản phẩm</label>
-                                        <div id="variant-wrapper">
-                                            <div class="row mb-2 variant-group">
-                                                <div class="col-md-3">
-                                                    <select name="variants[0][color_id]" class="form-select">
-                                                        @foreach($colors as $color)
-                                                            <option value="{{ $color->id }}">{{ $color->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-3">
-{{--                                                    <select name="variants[0][size]" class="form-select">--}}
-{{--                                                        @foreach(['36', '37', '38', '39', '40', '41', '42', '43'] as $size)--}}
-{{--                                                            <option value="{{ $size }}">{{ $size }}</option>--}}
-{{--                                                        @endforeach--}}
-{{--                                                    </select>--}}
-                                                    <select name="variants[0][size_id]" class="form-select">
-                                                        @foreach($sizes as $size)
-                                                            <option value="{{ $size->id }}">{{ $size->number }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <input type="number" name="variants[0][stock]" class="form-control" placeholder="Tồn kho">
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <button type="button" class="btn btn-danger remove-variant">X</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button type="button" id="add-variant" class="btn btn-primary btn-sm">+ Thêm biến thể</button>
-                                    </div>
+                                    {{--                                    --}}{{-- Biến thể (màu + size + tồn kho) --}}
+                                    {{--                                    <div class="mb-3">--}}
+                                    {{--                                        <label class="form-label">Biến thể sản phẩm</label>--}}
+                                    {{--                                        <div id="variant-wrapper">--}}
+                                    {{--                                            <div class="row mb-2 variant-group">--}}
+                                    {{--                                                <div class="col-md-2">--}}
+                                    {{--                                                    <select name="variants[0][color_id]" class="form-select">--}}
+                                    {{--                                                        @foreach($colors as $color)--}}
+                                    {{--                                                            <option value="{{ $color->id }}">{{ $color->name }}</option>--}}
+                                    {{--                                                        @endforeach--}}
+                                    {{--                                                    </select>--}}
+                                    {{--                                                </div>--}}
+                                    {{--                                                <div class="col-md-2">--}}
+                                    {{--                                                    --}}{{--                                                    <select name="variants[0][size]" class="form-select">--}}
+                                    {{--                                                    --}}{{--                                                        @foreach(['36', '37', '38', '39', '40', '41', '42', '43'] as $size)--}}
+                                    {{--                                                    --}}{{--                                                            <option value="{{ $size }}">{{ $size }}</option>--}}
+                                    {{--                                                    --}}{{--                                                        @endforeach--}}
+                                    {{--                                                    --}}{{--                                                    </select>--}}
+                                    {{--                                                    <select name="variants[0][size_id]" class="form-select">--}}
+                                    {{--                                                        @foreach($sizes as $size)--}}
+                                    {{--                                                            <option value="{{ $size->id }}">{{ $size->number }}</option>--}}
+                                    {{--                                                        @endforeach--}}
+                                    {{--                                                    </select>--}}
+                                    {{--                                                </div>--}}
+                                    {{--                                                <div class="col-md-7">--}}
+                                    {{--                                                    <input type="number" name="variants[0][stock]" class="form-control" placeholder="Tồn kho">--}}
+                                    {{--                                                </div>--}}
+                                    {{--                                                <div class="col-md-1">--}}
+                                    {{--                                                    <button type="button" class="btn btn-danger remove-variant"><i class="bx bxs-trash"></i></button>--}}
+                                    {{--                                                </div>--}}
+                                    {{--                                            </div>--}}
+                                    {{--                                        </div>--}}
+                                    {{--                                        <button type="button" id="add-variant" class="btn btn-primary btn-sm">+ Thêm biến thể</button>--}}
+                                    {{--                                    </div>--}}
                                 </div>
 
                             </div>
                         </div>
+
                     </div>
+
                 </div>
+
                 <div class="text-center">
                     <button type="submit" class="btn btn-primary">Lưu thông tin</button>
                     <button type="reset" class="btn btn-secondary">Đặt lại</button>
@@ -282,7 +264,9 @@
         </section>
 
     </main><!-- End #main -->
+@endsection
 
+@section('script')
     <script>
         const imageInput = document.getElementById('thumbnail');
         const preview = document.getElementById('image_preview');
@@ -370,67 +354,48 @@
     </script> <!--Preview product gallery -->
 
     <script>
-        let galleryIndex = 1;
+        // let galleryIndex = 1;
         let variantIndex = 1;
-
-        // Thêm ảnh theo màu
-        document.getElementById('add-color-gallery').addEventListener('click', function () {
-            const wrapper = document.getElementById('color-gallery-wrapper');
-            const html = `
-        <div class="row mb-2 color-gallery-group">
-            <div class="col-md-4">
-                <select name="color_galleries[${galleryIndex}][color_id]" class="form-select">
-                    @foreach($colors as $color)
-            <option value="{{ $color->id }}">{{ $color->name }}</option>
-                    @endforeach
-            </select>
-        </div>
-        <div class="col-md-6">
-            <input type="file" name="color_galleries[${galleryIndex}][images][]" class="form-control" multiple>
-            </div>
-            <div class="col-md-2">
-                <button type="button" class="btn btn-danger remove-gallery">X</button>
-            </div>
-        </div>`;
-            wrapper.insertAdjacentHTML('beforeend', html);
-            galleryIndex++;
-        });
-
-        // Xoá ảnh theo màu
-        document.addEventListener('click', function (e) {
-            if (e.target.classList.contains('remove-gallery')) {
-                e.target.closest('.color-gallery-group').remove();
+        const checkBtnRemove = () => {
+            let btnRemove = document.getElementsByClassName('remove-variant')
+            console.log(btnRemove.length)
+            if (btnRemove.length == 1){
+                btnRemove[0].classList.add('disabled')
+            } else {
+                btnRemove[0].classList.remove('disabled')
             }
-        });
+        }
+        checkBtnRemove()
 
         // Thêm biến thể
         document.getElementById('add-variant').addEventListener('click', function () {
             const wrapper = document.getElementById('variant-wrapper');
             const html = `
-        <div class="row mb-2 variant-group">
-            <div class="col-md-3">
-                <select name="variants[${variantIndex}][color_id]" class="form-select">
-                    @foreach($colors as $color)
+                <div class="row mb-2 variant-group">
+                    <div class="col-md-2">
+                        <select name="variants[${variantIndex}][color_id]" class="form-select">
+                            @foreach($colors as $color)
             <option value="{{ $color->id }}">{{ $color->name }}</option>
-                    @endforeach
+                            @endforeach
             </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-2">
             <select name="variants[${variantIndex}][size]" class="form-select">
-                    @foreach(['36', '37', '38', '39', '40', '41', '42', '43'] as $size)
-            <option value="{{ $size }}">{{ $size }}</option>
-                    @endforeach
+                            @foreach($sizes as $size)
+            <option value="{{ $size->id }}">{{ $size->number }}</option>
+                            @endforeach
             </select>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-7">
             <input type="number" name="variants[${variantIndex}][stock]" class="form-control" placeholder="Tồn kho">
-            </div>
-            <div class="col-md-3">
-                <button type="button" class="btn btn-danger remove-variant">X</button>
-            </div>
-        </div>`;
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-danger remove-variant"><i class="bx bxs-trash"></i></button>
+                    </div>
+                </div>`;
             wrapper.insertAdjacentHTML('beforeend', html);
             variantIndex++;
+            checkBtnRemove()
         });
 
         // Xoá biến thể
@@ -438,51 +403,9 @@
             if (e.target.classList.contains('remove-variant')) {
                 e.target.closest('.variant-group').remove();
             }
+            checkBtnRemove()
         });
     </script> <!--Add product variant -->
-
-{{--    <script>--}}
-{{--        document.addEventListener('DOMContentLoaded', function (){--}}
-{{--            const galleryInput = document.getElementById('gallery');--}}
-{{--            const galleryPreview = document.getElementById('galleryPreview');--}}
-
-{{--            galleryInput.addEventListener('change', function () {--}}
-{{--                galleryPreview.innerHTML = ''; //xoa preview cu--}}
-{{--                const files = Array.from(galleryInput.files);--}}
-
-{{--                files.forEach((file, index) => {--}}
-{{--                    const reader = new FileReader();--}}
-{{--                    reader.onload = function (e){--}}
-{{--                        const wrapper = document.createElement('div');--}}
-{{--                        wrapper.classList.add('position-relative');--}}
-
-{{--                        wrapper.innerHTML = `--}}
-{{--                    <img src="${e.target.result}" alt="preview" class="rounded" style="width: 120px; height: 120px; object-fit: cover;">--}}
-{{--                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 rounded-circle delete-preview" style="transform: translate(50%, -50%);">&times;</button>--}}
-{{--                `;--}}
-
-{{--                        //--}}
-{{--                        wrapper.querySelector('.delete-preview').addEventListener('click', () => {--}}
-{{--                            files.splice(index, 1);--}}
-{{--                            updateInputFiles(files);--}}
-{{--                            wrapper.remove();--}}
-{{--                        })--}}
-
-{{--                        galleryPreview.appendChild(wrapper);--}}
-{{--                    };--}}
-{{--                    reader.readAsDataURL(file);--}}
-{{--                });--}}
-
-{{--                //--}}
-{{--                function updateInputFiles(newFiles) {--}}
-{{--                    const dataTransfer = new DataTransfer();--}}
-{{--                    newFiles.forEach(file => dataTransfer.items.add(file));--}}
-{{--                    galleryInput.files = dataTransfer.files;--}}
-{{--                }--}}
-{{--            });--}}
-{{--        });--}}
-{{--    </script>--}}
-
 @endsection
 
 @extends('admin.components.footer')

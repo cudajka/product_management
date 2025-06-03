@@ -12,10 +12,10 @@ class Color extends Model
     protected $primaryKey = 'id';
     public $incrementing = true;
     public $timestamps = true;
-    protected $fillable = [];
+    protected $fillable = ['name', 'code'];
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
-    public function products(){
-        return $this->belongsToMany(Product::class, 'product_variants');
+    public function variants(){
+        return $this->hasMany(ProductVariant::class);
     }
 }
