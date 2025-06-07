@@ -165,40 +165,42 @@ class ProductController extends Controller
 //            'color_ids.*' => 'exists:colors,id',
         ]);
 
-        $newProduct = new Product();
+        $product = new Product();
 
         //Add thumbnail
         if ($request->hasFile('thumbnail')) {
             $path = $request->file('thumbnail')->store('images', 'public');
-            $newProduct->thumbnail = $path;
+            $product->thumbnail = $path;
         }
 //        $extension = $request->file('thumbnail')->getClientOriginalExtension();
 
-        $newProduct->name = $request->name;
-        $newProduct->status = $request->status;
-        $newProduct->price = $request->price;
-        $newProduct->discount = $request->discount;
-        $newProduct->category_id = $request->category_id;
-        $newProduct->brand_id = $request->brand_id;
-        $newProduct->description = $request->description;
-        $newProduct->save();
+        $product->name = $request->name;
+        $product->status = $request->status;
+        $product->group = $request->group;
+        $product->price = $request->price;
+        $product->discount = $request->discount;
+        $product->color_id = $request->color_id;
+        $product->category_id = $request->category_id;
+        $product->brand_id = $request->brand_id;
+        $product->description = $request->description;
+        $product->save();
 
         //xu ly nhieu anh o day
 
         // => $images
 //        foreach ($images as $image) {
-//            $newProductImage =  new ProductImage();
-//            $newProductImage->url = $image;
-//            $newProductImage->product_id = $newProduct->id;
+//            $productImage =  new ProductImage();
+//            $productImage->url = $image;
+//            $productImage->product_id = $product->id;
 //
 //        }
 
         if ($request->hasFile('gallery'))
         {
             foreach ($request->file('gallery') as $file){
-                $path = $file->store("images/product_images/{$newProduct->id}", 'public');
+                $path = $file->store("images/product_images/{$product->id}", 'public');
                 ProductImage::create([
-                    'product_id' => $newProduct->id,
+                    'product_id' => $product->id,
                     'image_path' => $path,
                 ]);
             }
@@ -208,14 +210,13 @@ class ProductController extends Controller
         $quantities = $request->input('quantities', []);
 
         foreach ($quantities as $sizeId => $quantity) {
-            $quantity = (int) $quantity; // ép kiểu
+            $quantity = is_numeric($quantity) ? (int)$quantity : 0;
 
-            if ($quantity > 0) {
-                $newProduct->variants()->create([
-                    'size_id' => $sizeId,
-                    'quantity' => $quantity,
-                ]);
-            }
+            // Luôn tạo bản ghi, kể cả quantity = 0
+            $product->variants()->create([
+                'size_id' => $sizeId,
+                'quantity' => $quantity,
+            ]);
         }
 
 //        if ($request->color_galleries)
@@ -225,13 +226,13 @@ class ProductController extends Controller
 //            foreach ($request->color_galleries as $item){
 //                $color_id = $item['color_id'];
 ////                ProductImage::create([
-////                    'product_id' => $newProduct->id,
+////                    'product_id' => $product->id,
 ////                    'image_path' => $path,
 ////                ]);
 //                foreach ($item['images'] as $image){
-//                    $path = $image->store("images/product_images/{$newProduct->id}/color_$color_id", 'public');
+//                    $path = $image->store("images/product_images/{$product->id}/color_$color_id", 'public');
 //                    $data[] = [
-//                        'product_id' => $newProduct->id,
+//                        'product_id' => $product->id,
 //                        'color_id' => $color_id,
 //                        'image_path' => $path,
 //                    ];
@@ -245,10 +246,10 @@ class ProductController extends Controller
 //        foreach ($request->color_ids as $index => $colorId) {
 //            if ($request->hasFile("images.$index.files")) {
 //                foreach ($request->file("images.$index.files") as $file) {
-//                    $path = $file->store("images/product_images/{$newProduct->id}/color_$colorId", 'public');
+//                    $path = $file->store("images/product_images/{$product->id}/color_$colorId", 'public');
 //
 //                    ProductImage::create([
-//                        'product_id' => $newProduct->id,
+//                        'product_id' => $product->id,
 //                        'color_id' => $colorId,
 //                        'image_path' => $path,
 //                    ]);
@@ -277,9 +278,12 @@ class ProductController extends Controller
         $brands = Brand::all();
         $colors = Color::all();
         $sizes = Size::all();
-        $editProduct = Product::with('productCategory', 'brand')->find($id);
+        $product = Product::with('productCategory', 'brand')->find($id);
 
-        $productImagesByColor = ProductImage::where('product_id', $editProduct->id)
+        // Lấy tồn kho hiện tại dạng [size_id => quantity]
+        $existingVariants = $product->variants->pluck('quantity', 'size_id')->toArray();
+
+        $productImagesByColor = ProductImage::where('product_id', $product->id)
             ->get()
             ->groupBy('color_id')
             ->map(function ($images, $color_id) {
@@ -297,7 +301,7 @@ class ProductController extends Controller
             ->values()
             ->toArray();
 
-        return view('admin.products.edit', compact('editProduct', 'productCategories', 'brands', 'colors', 'sizes', 'productImagesByColor'));
+        return view('admin.products.edit', compact('product', 'productCategories', 'brands', 'colors', 'sizes', 'existingVariants', 'productImagesByColor'));
     }
 
     /**
@@ -315,45 +319,66 @@ class ProductController extends Controller
             'delete_old_thumbnail' => 'nullable|boolean',
         ]);
 
-        $editProduct = Product::findOrFail($id);
+        $product = Product::findOrFail($id);
 
-        $editProduct->name = $request->input('name');
-        $editProduct->status = $request->input('status');
-        $editProduct->price = $request->input('price');
-        $editProduct->discount  = $request->input('discount');
-        $editProduct->category_id = $request->input('category_id');
-        $editProduct->brand_id = $request->input('brand_id');
-        $editProduct->description = $request->input('description');
+        $product->name = $request->input('name');
+        $product->status = $request->input('status');
+        $product->group = $request->input('group');
+        $product->price = $request->input('price');
+        $product->discount = $request->input('discount');
+        $product->color_id = $request->input('color_id');
+        $product->category_id = $request->input('category_id');
+        $product->brand_id = $request->input('brand_id');
+        $product->description = $request->input('description');
 
-        $editProduct->save();
+        // Cập nhật tồn kho theo size
+        $quantities = $request->input('quantities', []);
+
+        foreach ($quantities as $sizeId => $quantity) {
+            $quantity = (int) $quantity;
+
+            // Kiểm tra nếu bản ghi đã tồn tại
+            $variant = $product->variants()->where('size_id', $sizeId)->first();
+
+            if ($variant) {
+                // Cập nhật quantity dù là 0
+                $variant->update(['quantity' => $quantity]);
+            } else {
+                // Tạo mới luôn, kể cả quantity = 0
+                $product->variants()->create([
+                    'size_id' => $sizeId,
+                    'quantity' => $quantity,
+                ]);
+            }
+        }
 
         //Xóa ảnh thumbnail
         if ($request->hasFile('thumbnail')) {
             // Xóa ảnh cũ nếu có
-            if ($editProduct->thumbnail && Storage::disk('public')->exists($editProduct->thumbnail)) {
-                Storage::disk('public')->delete($editProduct->thumbnail);
+            if ($product->thumbnail && Storage::disk('public')->exists($product->thumbnail)) {
+                Storage::disk('public')->delete($product->thumbnail);
             }
 
             // Lưu ảnh mới
             $path = $request->file('thumbnail')->store('images', 'public');
-            $editProduct->thumbnail = $path;
+            $product->thumbnail = $path;
         } elseif ($request->input('delete_old_thumbnail') == 1) {
             // Không có ảnh mới nhưng muốn xóa ảnh cũ
-            if ($editProduct->thumbnail && Storage::disk('public')->exists($editProduct->thumbnail)) {
-                Storage::disk('public')->delete($editProduct->thumbnail);
+            if ($product->thumbnail && Storage::disk('public')->exists($product->thumbnail)) {
+                Storage::disk('public')->delete($product->thumbnail);
             }
-            $editProduct->thumbnail = null;
+            $product->thumbnail = null;
         }
 
 //        if ($request->hasFile('thumbnail')) {
 //            // Xóa ảnh cũ nếu có
-//            if ($editProduct->image_path && Storage::disk('public')->exists($editProduct->image_path)) {
-//                Storage::disk('public')->delete($editProduct->image_path);
+//            if ($product->image_path && Storage::disk('public')->exists($product->image_path)) {
+//                Storage::disk('public')->delete($product->image_path);
 //            }
 //
 //            // Lưu ảnh mới
 //            $path = $request->file('thumbnail')->store('images', 'public');
-//            $editProduct->image_path = $path;
+//            $product->image_path = $path;
 //        }
 
         //Xóa thư viện ảnh
@@ -373,10 +398,10 @@ class ProductController extends Controller
         // Thêm ảnh mới
         if ($request->hasFile('gallery')) {
             foreach ($request->file('gallery') as $file) {
-                $path = $file->store("images/product_images/{$editProduct->id}/", 'public');
+                $path = $file->store("images/product_images/{$product->id}/", 'public');
 
                 ProductImage::create([
-                    'product_id' => $editProduct->id,
+                    'product_id' => $product->id,
                     'image_path' => $path
                 ]);
             }
@@ -398,7 +423,7 @@ class ProductController extends Controller
 //                    foreach ($newImages as $image) {
 //                        $path = $image->store('images/product_images', 'public');
 //                        ProductImage::create([
-//                            'product_id' => $editProduct->id,
+//                            'product_id' => $product->id,
 //                            'color_id' => $color_id,
 //                            'image_path' => $path,
 //                        ]);
@@ -408,6 +433,7 @@ class ProductController extends Controller
 //                // Không đụng gì thì KHÔNG XÓA và KHÔNG INSERT gì cả
 //            }
 //        }
+        $product->save();
 
         return redirect()->route('products.index')->with('success', 'The product has been updated.');
     }

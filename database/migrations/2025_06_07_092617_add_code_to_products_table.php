@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('product_variants', function (Blueprint $table) {
-            $table->dropForeign(['color_id']);
-            $table->dropColumn('color_id');
+        Schema::table('products', function (Blueprint $table) {
+            $table->string('code')->after('name');
         });
     }
 
@@ -22,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('product_variants', function (Blueprint $table) {
-            $table->unsignedBigInteger('color_id')->nullable();
-            $table->foreign('color_id')->references('id')->on('colors');
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropColumn('code');
         });
     }
 };

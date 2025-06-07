@@ -81,6 +81,16 @@
                                         </div>
                                     </div>
                                     <div class="row mb-3">
+                                        <label for="color_id" class="col-sm-2 col-form-label">Màu sắc</label>
+                                        <div class="col-sm-10">
+                                            <select class="form-select" name="color_id">
+                                                @foreach($colors as $key => $color)
+                                                    <option value="{{$color->id}}">{{$color->name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
                                         <label for="category_id" class="col-sm-2 col-form-label">Loại sản phẩm</label>
                                         <div class="col-sm-10">
 {{--                                            <select class="form-select" aria-label="Default select example" name="category_id">--}}
@@ -211,42 +221,7 @@
                                             @endforeach
                                             </tbody>
                                         </table>
-
                                     </div>
-                                    {{--                                    --}}{{-- Biến thể (màu + size + tồn kho) --}}
-                                    {{--                                    <div class="mb-3">--}}
-                                    {{--                                        <label class="form-label">Biến thể sản phẩm</label>--}}
-                                    {{--                                        <div id="variant-wrapper">--}}
-                                    {{--                                            <div class="row mb-2 variant-group">--}}
-                                    {{--                                                <div class="col-md-2">--}}
-                                    {{--                                                    <select name="variants[0][color_id]" class="form-select">--}}
-                                    {{--                                                        @foreach($colors as $color)--}}
-                                    {{--                                                            <option value="{{ $color->id }}">{{ $color->name }}</option>--}}
-                                    {{--                                                        @endforeach--}}
-                                    {{--                                                    </select>--}}
-                                    {{--                                                </div>--}}
-                                    {{--                                                <div class="col-md-2">--}}
-                                    {{--                                                    --}}{{--                                                    <select name="variants[0][size]" class="form-select">--}}
-                                    {{--                                                    --}}{{--                                                        @foreach(['36', '37', '38', '39', '40', '41', '42', '43'] as $size)--}}
-                                    {{--                                                    --}}{{--                                                            <option value="{{ $size }}">{{ $size }}</option>--}}
-                                    {{--                                                    --}}{{--                                                        @endforeach--}}
-                                    {{--                                                    --}}{{--                                                    </select>--}}
-                                    {{--                                                    <select name="variants[0][size_id]" class="form-select">--}}
-                                    {{--                                                        @foreach($sizes as $size)--}}
-                                    {{--                                                            <option value="{{ $size->id }}">{{ $size->number }}</option>--}}
-                                    {{--                                                        @endforeach--}}
-                                    {{--                                                    </select>--}}
-                                    {{--                                                </div>--}}
-                                    {{--                                                <div class="col-md-7">--}}
-                                    {{--                                                    <input type="number" name="variants[0][stock]" class="form-control" placeholder="Tồn kho">--}}
-                                    {{--                                                </div>--}}
-                                    {{--                                                <div class="col-md-1">--}}
-                                    {{--                                                    <button type="button" class="btn btn-danger remove-variant"><i class="bx bxs-trash"></i></button>--}}
-                                    {{--                                                </div>--}}
-                                    {{--                                            </div>--}}
-                                    {{--                                        </div>--}}
-                                    {{--                                        <button type="button" id="add-variant" class="btn btn-primary btn-sm">+ Thêm biến thể</button>--}}
-                                    {{--                                    </div>--}}
                                 </div>
 
                             </div>

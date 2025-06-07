@@ -75,8 +75,8 @@
                                     <div class="modal-size">
                                         <h4>Size</h4>
                                         <select>
-                                            @foreach($sizes as $size)
-                                                <option title="{{$size->name}}" value="{{$size->id}}">{{$size->name}}</option>
+                                            @foreach($variants as $variant)
+                                                <option title="{{$variant->name}}" value="{{$variant->size_id}}" data-quantity="{{ $variant->quantity }}">{{$variant->size->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>

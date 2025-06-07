@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Cập nhật sản phẩm'. ': '. $editProduct->name)
+@section('title', 'Cập nhật sản phẩm'. ': '. $product->name)
 
 @extends('admin.components.header')
 
@@ -24,7 +24,7 @@
             </nav>
         </div><!-- End Page Title -->
         <section class="section">
-            <form action="{{route('products.update', ['product'=>$editProduct->id])}}" method="post" enctype="multipart/form-data" novalidate>
+            <form action="{{route('products.update', ['product'=>$product->id])}}" method="post" enctype="multipart/form-data" novalidate>
                 @csrf
                 @method('PUT')
 
@@ -41,7 +41,10 @@
                                     <div class="row mb-3">
                                         <label for="name" class="col-sm-2 col-form-label">Tên sản phẩm <span class="text-danger">*</span></label>
                                         <div class="col-sm-10">
-                                            <input type="text" class="form-control" id="name" name="name" value="{{$editProduct->name}}" required>
+                                            <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{$product->name}}">
+                                            @error('name')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -49,19 +52,38 @@
                                         <div class="col-sm-10">
                                             <select class="form-select" aria-label="Default select example"
                                                     name="status">
-                                                <option value="1" {{($editProduct->status == 1) ? "selected" : ""}}>Còn hàng</option>
-                                                <option value="0" {{($editProduct->status == 0) ? "selected" : ""}}>Hết hàng</option>
+                                                <option value="1" {{($product->status == 1) ? "selected" : ""}}>Còn hàng</option>
+                                                <option value="0" {{($product->status == 0) ? "selected" : ""}}>Hết hàng</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="group" class="col-sm-2 col-form-label">Nhóm sản phẩm</label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control @error('group') is-invalid @enderror" id="group" name="group" value="{{$product->group}}">
+                                            @error('group')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
                                     <div class="row mb-3">
                                         <label for="price" class="col-sm-2 col-form-label">Giá <span class="text-danger">*</span></label>
                                         <div class="col-sm-4">
-                                            <input type="number" step="1000" min="0" class="form-control" id="price" name="price" value="{{$editProduct->price}}" required>
+                                            <input type="number" step="1000" min="0" class="form-control" id="price" name="price" value="{{$product->price}}" required>
                                         </div>
                                         <label for="discount" class="col-sm-2 col-form-label">Chiết khấu</label>
                                         <div class="col-sm-4">
-                                            <input type="number" class="form-control" id="discount" name="discount" value="{{$editProduct->discount}}">
+                                            <input type="number" class="form-control" id="discount" name="discount" value="{{$product->discount}}">
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <label for="color_id" class="col-sm-2 col-form-label">Màu sắc</label>
+                                        <div class="col-sm-10">
+                                            <select class="form-select" name="color_id">
+                                                @foreach($colors as $key => $color)
+                                                    <option value="{{$color->id}}" {{($product->color_id) == $color->id ? "selected" : ""}}>{{$color->name}}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="row mb-3">
@@ -69,7 +91,7 @@
                                         <div class="col-sm-10">
 {{--                                            <select class="form-select" aria-label="Default select example" name="category_id">--}}
 {{--                                                @foreach($productCategories as $key=>$productCategory)--}}
-{{--                                                    <option value="{{$productCategory->id}}" {{$editProduct->category_id == $productCategory->id ? "selected" : ""}}>{{$productCategory->name}}</option>--}}
+{{--                                                    <option value="{{$productCategory->id}}" {{$product->category_id == $productCategory->id ? "selected" : ""}}>{{$productCategory->name}}</option>--}}
 {{--                                                @endforeach--}}
 {{--                                            </select>--}}
                                             @php
@@ -86,7 +108,7 @@
 
                                             <select name="category_id" class="form-select" required>
                                                 <option value="" disabled>-- Chọn danh mục --</option>
-                                                @php showCategoryOptions($productCategories, $editProduct->category_id); @endphp
+                                                @php showCategoryOptions($productCategories, $product->category_id); @endphp
                                             </select>
                                         </div>
                                     </div>
@@ -95,7 +117,7 @@
                                         <div class="col-sm-10">
                                             <select class="form-select" name="brand_id">
                                                 @foreach($brands as $key=>$brand)
-                                                    <option value="{{$brand->id}}" {{($editProduct->brand_id) == $brand->id ? "selected" : ""}}>{{$brand->name}}</option>
+                                                    <option value="{{$brand->id}}" {{($product->brand_id) == $brand->id ? "selected" : ""}}>{{$brand->name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -104,139 +126,13 @@
                                         <label for="description" class="form-label">Mô tả sản phẩm</label>
                                         <!-- TinyMCE Editor -->
                                         <textarea class="tinymce-editor" id="description" name="description" rows="3">
-                                            {{$editProduct->description}}
+                                            {{$product->description}}
                                         </textarea><!-- End TinyMCE Editor -->
                                     </div>
                                 </div>
 
                             </div>
                         </div>
-
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Biến thể sản phẩm</h5>
-
-                                <div class="col-md">
-
-                                    <!-- Màu + ảnh theo màu -->
-{{--                                    <div class="col-md mb-3">--}}
-{{--                                        <div id="color-image-rows">--}}
-{{--                                            @foreach($productImagesByColor as $index => $group)--}}
-{{--                                                <div class="color-image-row row mb-3">--}}
-{{--                                                    <div class="col-md-2">--}}
-{{--                                                        <label class="form-label">Màu sắc</label>--}}
-{{--                                                        <select name="color_galleries[{{ $index }}][color_id]" class="form-select">--}}
-{{--                                                            @foreach($colors as $color)--}}
-{{--                                                                <option value="{{ $color->id }}" {{ $color->id == $group['color_id'] ? 'selected' : '' }}>{{ $color->name }}</option>--}}
-{{--                                                            @endforeach--}}
-{{--                                                        </select>--}}
-{{--                                                    </div>--}}
-{{--                                                    <div class="col-md-9">--}}
-{{--                                                        <label class="form-label">Ảnh sản phẩm (nhiều ảnh)</label>--}}
-{{--                                                        <input--}}
-{{--                                                            type="file"--}}
-{{--                                                            name="color_galleries[{{ $index }}][images][]"--}}
-{{--                                                            class="filepond form-control"--}}
-{{--                                                            accept="image/*"--}}
-{{--                                                            multiple--}}
-{{--                                                            data-initial-files='@json($group["images"])'--}}
-{{--                                                        >--}}
-{{--                                                    </div>--}}
-{{--                                                    <div class="col-md-1 d-flex align-items-start">--}}
-{{--                                                        <button type="button" class="btn btn-danger btn-remove-row {{ count($productImagesByColor) <= 1 ? 'disabled' : '' }}"><i class="bx bxs-trash"></i></button>--}}
-{{--                                                    </div>--}}
-{{--                                                </div>--}}
-{{--                                            @endforeach--}}
-{{--                                        </div>--}}
-
-{{--                                        <button type="button" class="btn btn-secondary mb-3" id="btn-add-row">+ Thêm màu</button>--}}
-{{--                                    </div>--}}
-
-                                    {{-- Biến thể (màu + size + tồn kho) --}}
-                                    <div class="mb-3">
-                                        <label class="form-label">Biến thể sản phẩm</label>
-                                        <div id="variant-wrapper">
-                                            <div class="row mb-2 variant-group">
-                                                <div class="col-md-2">
-                                                    <select name="variants[0][color_id]" class="form-select">
-                                                        @foreach($colors as $color)
-                                                            <option value="{{ $color->id }}">{{ $color->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    {{--                                                    <select name="variants[0][size]" class="form-select">--}}
-                                                    {{--                                                        @foreach(['36', '37', '38', '39', '40', '41', '42', '43'] as $size)--}}
-                                                    {{--                                                            <option value="{{ $size }}">{{ $size }}</option>--}}
-                                                    {{--                                                        @endforeach--}}
-                                                    {{--                                                    </select>--}}
-                                                    <select name="variants[0][size_id]" class="form-select">
-                                                        @foreach($sizes as $size)
-                                                            <option value="{{ $size->id }}">{{ $size->number }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <div class="col-md-7">
-                                                    <input type="number" name="variants[0][stock]" class="form-control" placeholder="Tồn kho">
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <button type="button" class="btn btn-danger remove-variant"><i class="bx bxs-trash"></i></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <button type="button" id="add-variant" class="btn btn-primary btn-sm">+ Thêm biến thể</button>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-
-                                <h5 class="card-title">Ảnh sản phẩm</h5>
-
-                                <div class="col-md mb-3">
-                                    <label for="thumbnail" class="form-label">Ảnh thumbnail</label>
-                                    <input type="file" class="form-control @error('thumbnail') is-invalid @enderror" id="thumbnail" name="thumbnail" accept="image/*">
-                                    @error('thumbnail')
-                                    <div class="invalid-feedback">{{$message}}</div>
-                                    @enderror
-
-                                    <!-- Ảnh preview -->
-                                    <div id="image_preview_wrapper" class="position-relative mt-3 mb-3 border border-1 border-danger-subtle rounded-3" style="max-width: 200px; height: 200px">
-                                        @if ($editProduct->thumbnail)
-                                            <img id="image_preview" src="{{asset('storage/'.$editProduct->thumbnail)}}" class="img-thumbnail" style="width: 100%; height: auto;" alt="">
-                                            <button type="button" id="remove_image_btn" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1" title="Xóa ảnh">&times;</button>
-                                        @else
-                                            <img id="image_preview" src="#" class="img-thumbnail d-none" style="width: 100%; height: auto;" alt="">
-                                            <button type="button" id="remove_image_btn" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 d-none" title="Xóa ảnh">&times;</button>
-                                        @endif
-                                    </div>
-                                </div>
-
-                                <div class="col-md mb-3">
-                                    <label for="gallery" class="form-label">Thư viện ảnh</label>
-                                    <input type="file" class="form-control" id="gallery" name="gallery[]" accept="image/*" multiple>
-                                    <button type="button" id="clearOldGalleryBtn" class="btn btn-outline-danger btn-sm mt-2">Xóa toàn bộ ảnh cũ</button>
-
-                                    <div id="galleryPreview" class="d-flex flex-wrap gap-2 mt-3">
-                                        @foreach ($editProduct->images as $image)
-                                            <div class="position-relative old-image-wrapper" data-id="{{$image->id}}">
-                                                <img src="{{asset('storage/' . $image->image_path)}}" alt="Ảnh cũ" class="img-thumbnail" style="width: 100px; object-fit: cover;">
-                                                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 delete-old-preview">&times;</button>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div> <!-- Thêm ảnh sản phẩm với Preview -->
-
-{{--                                <!-- Ảnh cũ nào bị xóa sẽ được đánh dấu ở đây -->--}}
-                                <input type="hidden" name="delete_old_images" id="deleteOldImages" value="[]">
-                            </div>
-                        </div> <!-- End Add product images -->
 
                         <div class="card">
                             <div class="card-body">
@@ -257,6 +153,84 @@
                                 </div>
                             </div>
                         </div> <!-- End SEO -->
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <h5 class="card-title">Ảnh sản phẩm</h5>
+
+                                <div class="col-md mb-3">
+                                    <label for="thumbnail" class="form-label">Ảnh thumbnail</label>
+                                    <input type="file" class="form-control @error('thumbnail') is-invalid @enderror" id="thumbnail" name="thumbnail" accept="image/*">
+                                    @error('thumbnail')
+                                    <div class="invalid-feedback">{{$message}}</div>
+                                    @enderror
+
+                                    <!-- Ảnh preview -->
+                                    <div id="image_preview_wrapper" class="position-relative mt-3 mb-3 border border-1 border-danger-subtle rounded-3" style="max-width: 200px; height: 200px">
+                                        @if ($product->thumbnail)
+                                            <img id="image_preview" src="{{asset('storage/'.$product->thumbnail)}}" class="img-thumbnail" style="width: 100%; height: auto;" alt="">
+                                            <button type="button" id="remove_image_btn" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1" title="Xóa ảnh">&times;</button>
+                                        @else
+                                            <img id="image_preview" src="#" class="img-thumbnail d-none" style="width: 100%; height: auto;" alt="">
+                                            <button type="button" id="remove_image_btn" class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1 d-none" title="Xóa ảnh">&times;</button>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="col-md mb-3">
+                                    <label for="gallery" class="form-label">Thư viện ảnh</label>
+                                    <input type="file" class="form-control" id="gallery" name="gallery[]" accept="image/*" multiple>
+                                    <button type="button" id="clearOldGalleryBtn" class="btn btn-outline-danger btn-sm mt-2">Xóa toàn bộ ảnh cũ</button>
+
+                                    <div id="galleryPreview" class="d-flex flex-wrap gap-2 mt-3">
+                                        @foreach ($product->images as $image)
+                                            <div class="position-relative old-image-wrapper" data-id="{{$image->id}}">
+                                                <img src="{{asset('storage/' . $image->image_path)}}" alt="Ảnh cũ" class="img-thumbnail" style="width: 100px; object-fit: cover;">
+                                                <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 delete-old-preview">&times;</button>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div> <!-- Thêm ảnh sản phẩm với Preview -->
+
+{{--                                <!-- Ảnh cũ nào bị xóa sẽ được đánh dấu ở đây -->--}}
+                                <input type="hidden" name="delete_old_images" id="deleteOldImages" value="[]">
+                            </div>
+                        </div> <!-- End Add product images -->
+
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Số lượng sản phẩm</h5>
+
+                                <div class="col-md">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-bordered table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th>Kích thước</th>
+                                                <th>Số lượng</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            @foreach($sizes as $size)
+                                                <tr>
+                                                    <td>{{ $size->name }}</td>
+                                                    <td>
+                                                        <input type="number" name="quantities[{{ $size->id }}]"
+                                                               value="{{ old('quantities.' . $size->id, $existingVariants[$size->id] ?? '') }}"
+                                                               class="form-control" min="0" placeholder="0">
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
 
                 </div>
@@ -382,115 +356,115 @@
         });
     </script>
 
-    <script>
-        FilePond.registerPlugin(FilePondPluginImagePreview);
+{{--    <script>--}}
+{{--        FilePond.registerPlugin(FilePondPluginImagePreview);--}}
 
-        const colors = @json($colors);
-        let rowIndex = {{ count($productImagesByColor) }};
+{{--        const colors = @json($colors);--}}
+{{--        let rowIndex = {{ count($productImagesByColor) }};--}}
 
-        function initFilePondForInput(input) {
-            const initialFiles = $(input).data('initial-files');
+{{--        function initFilePondForInput(input) {--}}
+{{--            const initialFiles = $(input).data('initial-files');--}}
 
-            const pond = FilePond.create(input, {
-                allowMultiple: true,
-                allowReorder: true,
-                allowRemove: true,
-                allowDrop: true,
-                allowImagePreview: true,
-                instantUpload: false,
-                server: {
-                    process: null,
-                    revert: null,
-                }
-            });
+{{--            const pond = FilePond.create(input, {--}}
+{{--                allowMultiple: true,--}}
+{{--                allowReorder: true,--}}
+{{--                allowRemove: true,--}}
+{{--                allowDrop: true,--}}
+{{--                allowImagePreview: true,--}}
+{{--                instantUpload: false,--}}
+{{--                server: {--}}
+{{--                    process: null,--}}
+{{--                    revert: null,--}}
+{{--                }--}}
+{{--            });--}}
 
-            FilePond.setOptions({
-                instantUpload: false,
-                storeAsFile: true // RẤT QUAN TRỌNG để Laravel nhận đúng qua $_FILES
-            });
+{{--            FilePond.setOptions({--}}
+{{--                instantUpload: false,--}}
+{{--                storeAsFile: true // RẤT QUAN TRỌNG để Laravel nhận đúng qua $_FILES--}}
+{{--            });--}}
 
-            $(input).data('pondInstance', pond);
-        }
+{{--            $(input).data('pondInstance', pond);--}}
+{{--        }--}}
 
-        document.querySelectorAll('input.filepond').forEach(input => {
-            const initialFilesData = input.dataset.initialFiles;
-            let initialFiles = [];
+{{--        document.querySelectorAll('input.filepond').forEach(input => {--}}
+{{--            const initialFilesData = input.dataset.initialFiles;--}}
+{{--            let initialFiles = [];--}}
 
-            try {
-                initialFiles = JSON.parse(initialFilesData || '[]');
-            } catch (e) {
-                console.error('JSON lỗi:', e);
-            }
+{{--            try {--}}
+{{--                initialFiles = JSON.parse(initialFilesData || '[]');--}}
+{{--            } catch (e) {--}}
+{{--                console.error('JSON lỗi:', e);--}}
+{{--            }--}}
 
-            FilePond.create(input, {
-                files: initialFiles ? initialFiles.map(img => ({
-                    source: img.url,
-                    options: {
-                        type: 'local',
-                        file: {
-                            name: img.filename,
-                            size: img.size || 123456,
-                        },
-                        metadata: {
-                            id: img.id
-                        }
-                    }
-                })) : [],
-            });
+{{--            FilePond.create(input, {--}}
+{{--                files: initialFiles ? initialFiles.map(img => ({--}}
+{{--                    source: img.url,--}}
+{{--                    options: {--}}
+{{--                        type: 'local',--}}
+{{--                        file: {--}}
+{{--                            name: img.filename,--}}
+{{--                            size: img.size || 123456,--}}
+{{--                        },--}}
+{{--                        metadata: {--}}
+{{--                            id: img.id--}}
+{{--                        }--}}
+{{--                    }--}}
+{{--                })) : [],--}}
+{{--            });--}}
 
-            FilePond.setOptions({
-                instantUpload: false,
-                storeAsFile: true // RẤT QUAN TRỌNG để Laravel nhận đúng qua $_FILES
-            });
-        });
+{{--            FilePond.setOptions({--}}
+{{--                instantUpload: false,--}}
+{{--                storeAsFile: true // RẤT QUAN TRỌNG để Laravel nhận đúng qua $_FILES--}}
+{{--            });--}}
+{{--        });--}}
 
-        $(document).ready(function () {
-            $('.filepond').each(function () {
-                initFilePondForInput(this);
-            });
+{{--        $(document).ready(function () {--}}
+{{--            $('.filepond').each(function () {--}}
+{{--                initFilePondForInput(this);--}}
+{{--            });--}}
 
-            $('#btn-add-row').on('click', function () {
-                const newRow = `
-                <div class="color-image-row row mb-3">
-                    <div class="col-md-2">
-                        <label class="form-label">Màu sắc</label>
-                        <select name="color_galleries[${rowIndex}][color_id]" class="form-select">
-                            ${colors.map(color => `<option value="${color.id}">${color.name}</option>`).join('')}
-                        </select>
-                    </div>
-                    <div class="col-md-9">
-                        <label class="form-label">Ảnh sản phẩm (nhiều ảnh)</label>
-                        <input type="file"
-                            name="color_galleries[${rowIndex}][images][]"
-                            class="filepond form-control"
-                            accept="image/*"
-                            multiple
-                            data-index="${rowIndex}">
-                    </div>
-                    <div class="col-md-1 d-flex align-items-start">
-                        <button type="button" class="btn btn-danger btn-remove-row"><i class="bx bxs-trash"></i></button>
-                    </div>
-                </div>
-            `;
+{{--            $('#btn-add-row').on('click', function () {--}}
+{{--                const newRow = `--}}
+{{--                <div class="color-image-row row mb-3">--}}
+{{--                    <div class="col-md-2">--}}
+{{--                        <label class="form-label">Màu sắc</label>--}}
+{{--                        <select name="color_galleries[${rowIndex}][color_id]" class="form-select">--}}
+{{--                            ${colors.map(color => `<option value="${color.id}">${color.name}</option>`).join('')}--}}
+{{--                        </select>--}}
+{{--                    </div>--}}
+{{--                    <div class="col-md-9">--}}
+{{--                        <label class="form-label">Ảnh sản phẩm (nhiều ảnh)</label>--}}
+{{--                        <input type="file"--}}
+{{--                            name="color_galleries[${rowIndex}][images][]"--}}
+{{--                            class="filepond form-control"--}}
+{{--                            accept="image/*"--}}
+{{--                            multiple--}}
+{{--                            data-index="${rowIndex}">--}}
+{{--                    </div>--}}
+{{--                    <div class="col-md-1 d-flex align-items-start">--}}
+{{--                        <button type="button" class="btn btn-danger btn-remove-row"><i class="bx bxs-trash"></i></button>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            `;--}}
 
-                $('#color-image-rows').append(newRow);
-                const newInput = $(`#color-image-rows .color-image-row:last .filepond`);
-                initFilePondForInput(newInput[0]);
+{{--                $('#color-image-rows').append(newRow);--}}
+{{--                const newInput = $(`#color-image-rows .color-image-row:last .filepond`);--}}
+{{--                initFilePondForInput(newInput[0]);--}}
 
-                $('.btn-remove-row').prop('disabled', false);
-                rowIndex++;
-            });
+{{--                $('.btn-remove-row').prop('disabled', false);--}}
+{{--                rowIndex++;--}}
+{{--            });--}}
 
-            $(document).on('click', '.btn-remove-row', function () {
-                if ($('.color-image-row').length > 1) {
-                    $(this).closest('.color-image-row').remove();
-                    if ($('.color-image-row').length === 1) {
-                        $('.btn-remove-row').prop('disabled', true);
-                    }
-                }
-            });
-        });
-    </script>
+{{--            $(document).on('click', '.btn-remove-row', function () {--}}
+{{--                if ($('.color-image-row').length > 1) {--}}
+{{--                    $(this).closest('.color-image-row').remove();--}}
+{{--                    if ($('.color-image-row').length === 1) {--}}
+{{--                        $('.btn-remove-row').prop('disabled', true);--}}
+{{--                    }--}}
+{{--                }--}}
+{{--            });--}}
+{{--        });--}}
+{{--    </script>--}}
 
 @endsection
 

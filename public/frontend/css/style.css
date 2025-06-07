@@ -504,7 +504,7 @@ body {
   color: #333;
 }
 .header-mid-area .phone {
-  background: rgba(0, 0, 0, 0) url("../../../../../../My Web Sites/Juta - Shoes Shop HTML Template/htmldemo.net/juta/juta-v1/img/icon/phone-top.png") no-repeat scroll 0 100%;
+  background: rgba(0, 0, 0, 0) url("../img/icon/phone-top.png") no-repeat scroll 0 100%;
   color: #ffffff;
   display: inline-block;
   float: left;
@@ -537,7 +537,7 @@ body {
   position: relative;
 }
 .shopping-cart-box ul > li > a {
-  background: rgba(0, 0, 0, 0) url("../../../../../../My Web Sites/Juta - Shoes Shop HTML Template/htmldemo.net/juta/juta-v1/img/icon/shopping-icon.png") no-repeat scroll 0 50%;
+  background: rgba(0, 0, 0, 0) url("../img/icon/shopping-icon.png") no-repeat scroll 0 50%;
   display: block;
   font-size: 14px;
   font-weight: 400;
@@ -550,7 +550,7 @@ body {
   transition: none 0s ease 0s ;
 }
 .white-cart-box.shopping-cart-box ul > li > a {
-  background: rgba(0, 0, 0, 0) url("../../../../../../My Web Sites/Juta - Shoes Shop HTML Template/htmldemo.net/juta/juta-v1/img/icon/shopping-icon-2.png") no-repeat scroll 0 50%;
+  background: rgba(0, 0, 0, 0) url("../img/icon/shopping-icon-2.png") no-repeat scroll 0 50%;
 }
 .shopping-cart-box a .item-cart-inner .item-cont {
   background: #eb3e32 none repeat scroll 0 0;
@@ -1810,14 +1810,14 @@ body {
    13. newsletter-area css
 ------------------------------------*/
 .newsletter-inner {
-  background: rgba(0, 0, 0, 0) url("../../../../../../My Web Sites/Juta - Shoes Shop HTML Template/htmldemo.net/juta/img/bg-newletter.html") no-repeat scroll left center;
+  background: rgba(0, 0, 0, 0) url("../img/bg-newletter.html") no-repeat scroll left center;
   border-radius: 3px;
   padding: 96px 0;
   position: relative;
   text-align: center;
 }
 .newsletter-bg{
-  background: url(../../../../../../My Web Sites/Juta - Shoes Shop HTML Template/htmldemo.net/juta/juta-v1/img/banner/bg-newletter.jpg) no-repeat scroll left center;
+  background: url("../img/banner/bg-newletter.jpg") no-repeat scroll left center;
 }
 .newsletter-inner h4 {
   color: #ffffff;
@@ -1900,7 +1900,7 @@ body {
   margin-bottom: 30px;
 }
 .footer-area  .footer-info .phone {
-  background: rgba(0, 0, 0, 0) url(../../../../../../My Web Sites/Juta - Shoes Shop HTML Template/htmldemo.net/juta/juta-v1/img/icon/phone.png) no-repeat scroll left center;
+  background: rgba(0, 0, 0, 0) url(../img/icon/phone.png) no-repeat scroll left center;
   color: #ffffff;
   font-size: 24px;
   font-weight: 500;
@@ -2092,6 +2092,7 @@ body {
   -webkit-transition: all 0.3s ease-in-out 0s;
   transition: all 0.3s ease-in-out 0s;
   width: 50px;
+    overflow: hidden;
 }
 .color-list li a.orange {
   background: #f39c11 none repeat scroll 0 0;

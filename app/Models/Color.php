@@ -15,7 +15,11 @@ class Color extends Model
     protected $fillable = ['name', 'code'];
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
-    public function variants(){
-        return $this->hasMany(ProductVariant::class);
+
+    public function products(){
+        return $this->hasMany(Product::class);
     }
+//    public function variants(){
+//        return $this->hasMany(ProductVariant::class);
+//    }
 }

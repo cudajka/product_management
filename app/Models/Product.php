@@ -31,9 +31,9 @@ class Product extends Model
     {
         return $this->belongsTo(Brand::class, 'brand_id');
     }
-//    public function colors(){
-//        return $this->belongsToMany(Color::class, 'product_variants')->distinct();
-//    }
+    public function color(){
+        return $this->belongsTo(Color::class);
+    }
     public function sizes(){
         return $this->belongsToMany(Size::class, 'product_variants')->distinct();
     }
