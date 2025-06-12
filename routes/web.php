@@ -6,9 +6,11 @@ use App\Http\Controllers\Admin\ColorController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\LandingPage\ProductController as LandingPageProductController;
 use App\Http\Controllers\Admin\ProductVariantController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\SizeController;
+use App\Http\Controllers\LandingPage\CartController;
 use Illuminate\Support\Facades\Route;
 
 //Route::get('/', function () {
@@ -18,8 +20,17 @@ use Illuminate\Support\Facades\Route;
 // Front-End
 Route::get('/', [\App\Http\Controllers\LandingPage\HomeController::class, 'index'])->name('home');
 
-Route::get('/san-pham', [\App\Http\Controllers\LandingPage\ProductController::class, 'index'])->name('landing_page.products.index');
-Route::get('/san-pham/{id}', [\App\Http\Controllers\LandingPage\ProductController::class, 'show'])->name('landing_page.products.show');
+Route::get('/san-pham', [LandingPageProductController::class, 'index'])->name('landing_page.products.index');
+Route::get('/san-pham/{id}', [LandingPageProductController::class, 'show'])->name('landing_page.products.show');
+
+Route::post('/add-new-cart', [LandingPageProductController::class, 'addToCart'])->name('cart.add.new');
+Route::post('/get-cart', [LandingPageProductController::class, 'getCart'])->name('list.cart');
+
+Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::get('/cart/summary', [CartController::class, 'summary'])->name('cart.summary'); // AJAX load header
 
 
 // Admin

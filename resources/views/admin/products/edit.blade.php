@@ -48,6 +48,15 @@
                                         </div>
                                     </div>
                                     <div class="row mb-3">
+                                        <label for="code" class="col-sm-2 col-form-label">Mã sản phẩm <span class="text-danger">*</span></label>
+                                        <div class="col-sm-10">
+                                            <input type="text" class="form-control @error('code') is-invalid @enderror" id="code" name="code" value="{{$product->code}}">
+                                            @error('code')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
                                         <label for="status" class="col-form-label col-sm-2">Trạng thái</label>
                                         <div class="col-sm-10">
                                             <select class="form-select" aria-label="Default select example"

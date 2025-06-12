@@ -25,15 +25,15 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-3 order-2 order-lg-1">
-                    <!--sidebar-categores-box start  -->
-                    <div class="sidebar-categores-box mt-95">
+                    <!--sidebar-categories-box start  -->
+                    <div class="sidebar-categories-box mt-95">
                         <div class="sidebar-title">
                             <h2>For men</h2>
                         </div>
                         <!-- category-sub-menu start -->
                         <div class="category-sub-menu">
                             <ul>
-                                <li class="has-sub"><a href="# ">Jackets</a>
+                                <li class="has-sub"><a href="#">Jackets</a>
                                     <ul>
                                         <li><a href="#">Florals</a></li>
                                         <li><a href="#">Shirts</a></li>
@@ -69,78 +69,126 @@
                         </div>
                         <!-- category-sub-menu end -->
                     </div>
-                    <!--sidebar-categores-box end  -->
-                    <!--sidebar-categores-box start  -->
-                    <div class="sidebar-categores-box">
+                    <!--sidebar-categories-box end  -->
+                    <!--sidebar-categories-box start  -->
+                    <div class="sidebar-categories-box">
                         <div class="sidebar-title">
                             <h2>Filter By</h2>
                         </div>
-                        <!-- btn-clear-all start -->
-                        <button class="btn-clear-all">Clear all</button>
-                        <!-- btn-clear-all end -->
-                        <!-- filter-sub-area start -->
-                        <div class="filter-sub-area">
-                            <h5 class="filter-sub-titel">Price</h5>
-                            <div class="price-checkbox">
-                                <form action="#">
+                        <form>
+                            @php
+                                $requestPrice = request()->input('price', old('price'));
+                                $requestSize = request()->input('sizes', old('sizes'));
+                                $requestColor = request()->input('colors', old('colors'));
+                                $requestBrand = request()->input('brands', old('brands'));
+                            @endphp
+                            <!-- btn-clear-all start -->
+                            <button class="btn-clear-all">
+                                <a href="{{route('landing_page.products.index')}}">Xóa tất cả</a>
+                            </button>
+                            <!-- btn-submit start -->
+                            <button type="submit" class="btn-filter">Lọc</button>
+                            <!-- btn-submit end -->
+                            <!-- btn-clear-all end -->
+                            <!-- filter-sub-area start -->
+                            <div class="filter-sub-area">
+                                <h5 class="filter-sub-title">Giá</h5>
+                                <div class="price-checkbox">
                                     <ul>
-                                        <li><input type="radio" name="price-filter" checked=""><a href="#">$10.00 - $11.00 (1)</a></li>
-                                        <li><input type="radio" name="price-filter"><a href="#">$14.00 - $15.00 (2)</a></li>
-                                        <li><input type="radio" name="price-filter"><a href="#">$16.00 - $17.00 (2)</a></li>
-                                        <li><input type="radio" name="price-filter"><a href="#">$18.00 - $19.00 (1)</a></li>
-                                        <li><input type="radio" name="price-filter"><a href="#"> $24.00 - $28.00 (5)</a></li>
-                                        <li><input type="radio" name="price-filter"><a href="#"> $30.00 - $32.00 (1)</a></li>
-                                        <li><input type="radio" name="price-filter"><a href="#"> $50.00 - $53.00 (2) </a></li>
+                                        @foreach($priceRanges as $range => $label)
+                                            <li>
+                                                <input type="radio" id="{{$range}}" name="price"
+                                                       value="{{ $range }}"
+                                                        {{ (!$requestPrice && $range === 'all') || $requestPrice === $range ? 'checked' : ''}}>
+                                                <label class="ms-2" for="{{$range}}">{{ $label }}</label>
+                                            </li>
+                                        @endforeach
                                     </ul>
-                                </form>
+                                </div>
                             </div>
-                        </div>
-                        <!-- filter-sub-area end -->
-                        <!-- filter-sub-area start -->
-                        <div class="filter-sub-area">
-                            <h5 class="filter-sub-titel">Size</h5>
-                            <div class="size-checkbox">
-                                <form action="#">
+                            <!-- filter-sub-area end -->
+                            <!-- filter-sub-area start -->
+                            <div class="filter-sub-area">
+                                <h5 class="filter-sub-title">Kích thước</h5>
+                                <div class="size-checkbox">
                                     <ul>
-                                        <li><input type="checkbox" name="product-size"><a href="#">S (1)</a></li>
-                                        <li><input type="checkbox" name="product-size"><a href="#">M (4)</a></li>
-                                        <li><input type="checkbox" name="product-size"><a href="#">L (2)</a></li>
+                                        @foreach($sizes as $size)
+                                            <li>
+                                                <input
+                                                    type="checkbox"
+                                                    id="{{$size->number}}"
+                                                    name="sizes[]"
+                                                    value="{{$size->number}}"
+                                                    {{ $requestSize && in_array($size->number, $requestSize) ? 'checked' : ''}}
+                                                >
+                                                <label class="ms-2" for="{{$size->number}}">{{ $size->name }}</label>
+                                            </li>
+                                        @endforeach
                                     </ul>
-                                </form>
+                                </div>
                             </div>
-                        </div>
-                        <!-- filter-sub-area end -->
-                        <!-- filter-sub-area start -->
-                        <div class="filter-sub-area">
-                            <h5 class="filter-sub-titel">Color</h5>
-                            <div class="color-categoriy">
-                                <form action="#">
+                            <!-- filter-sub-area end -->
+                            <!-- filter-sub-area start -->
+                            <div class="filter-sub-area">
+                                <h5 class="filter-sub-title">Màu sắc</h5>
+                                <div class="color-category">
                                     <ul>
-                                        <li><span class="white"></span><a href="#">White (1)</a></li>
-                                        <li><span class="black"></span><a href="#">Black (1)</a></li>
-                                        <li><span class="Orange"></span><a href="#">Orange (3) </a></li>
-                                        <li><span class="Blue"></span><a href="#">Blue  (2) </a></li>
+                                        @foreach($colors as $color)
+                                            <li>
+                                                <input
+                                                    id="{{$color->name}}"
+                                                    type="checkbox"
+                                                    name="colors[]"
+                                                    value="{{$color->code}}"
+                                                    {{ $requestColor && in_array($color->code, $requestColor) ? 'checked' : ''}}
+                                                >
+                                                <label class="ms-2" for="{{$color->name}}">{{ $color->name }}</label>
+                                            </li>
+                                        @endforeach
                                     </ul>
-                                </form>
+                                </div>
                             </div>
-                        </div>
-                        <!-- filter-sub-area end -->
-                        <!-- filter-sub-area start -->
-                        <div class="filter-sub-area">
-                            <h5 class="filter-sub-titel">Compositions</h5>
-                            <div class="categori-checkbox">
-                                <form action="#">
+                            <div class="filter-sub-area">
+                                <h5 class="filter-sub-title">Thương hiệu</h5>
+                                <div class="color-category">
                                     <ul>
-                                        <li><input type="checkbox" name="product-categori"><a href="#">Cotton (5)</a></li>
-                                        <li><input type="checkbox" name="product-categori"><a href="#">Polyester (4)</a></li>
-                                        <li><input type="checkbox" name="product-categori"><a href="#">Viscose (4)</a></li>
+                                        @foreach($brands as $brand)
+                                            <li>
+                                                <input
+                                                    id="{{$brand->name}}"
+                                                    type="checkbox"
+                                                    name="brands[]"
+                                                    value="{{$brand->id}}"
+                                                    {{ $requestBrand && in_array($brand->id, $requestBrand) ? 'checked' : ''}}
+                                                >
+                                                <label class="ms-2" for="{{$brand->name}}">{{ $brand->name }}</label>
+                                            </li>
+                                        @endforeach
                                     </ul>
-                                </form>
+                                </div>
                             </div>
-                        </div>
-                        <!-- filter-sub-area end -->
+                            <!-- filter-sub-area end -->
+{{--                            <!-- filter-sub-area start -->--}}
+{{--                            <div class="filter-sub-area">--}}
+{{--                                <h5 class="filter-sub-titel">Compositions</h5>--}}
+{{--                                <div class="categori-checkbox">--}}
+{{--                                    <ul>--}}
+{{--                                        <li><input type="checkbox" name="product-category"><a href="#">Cotton--}}
+{{--                                                (5)</a></li>--}}
+{{--                                        <li><input type="checkbox" name="product-category"><a href="#">Polyester--}}
+{{--                                                (4)</a></li>--}}
+{{--                                        <li><input type="checkbox" name="product-category"><a href="#">Viscose--}}
+{{--                                                (4)</a></li>--}}
+{{--                                    </ul>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                            <!-- filter-sub-area end -->--}}
+                            <!-- btn-submit start -->
+                            <button type="submit" class="btn-filter">Lọc</button>
+                            <!-- btn-submit end -->
+                        </form>
                     </div>
-                    <!--sidebar-categores-box end  -->
+                    <!--sidebar-categories-box end  -->
 
                     <!-- shop-banner start -->
                     <div class="shop-banner">
@@ -157,8 +205,13 @@
                             <div class="product-view-mode">
                                 <!-- shop-item-filter-list start -->
                                 <ul class="nav shop-item-filter-list" role="tablist">
-                                    <li class="active" role="presentation"><a aria-selected="true" class="active show" data-bs-toggle="tab" role="tab" aria-controls="grid-view" href="#grid-view"><i class="fa fa-th"></i></a></li>
-                                    <li role="presentation"><a data-bs-toggle="tab" role="tab" aria-controls="list-view" href="#list-view"><i class="fa fa-th-list"></i></a></li>
+                                    <li class="active" role="presentation"><a aria-selected="true" class="active show"
+                                                                              data-bs-toggle="tab" role="tab"
+                                                                              aria-controls="grid-view"
+                                                                              href="#grid-view"><i class="fa fa-th"></i></a>
+                                    </li>
+                                    <li role="presentation"><a data-bs-toggle="tab" role="tab" aria-controls="list-view"
+                                                               href="#list-view"><i class="fa fa-th-list"></i></a></li>
                                 </ul>
                                 <!-- shop-item-filter-list end -->
                             </div>
@@ -170,15 +223,24 @@
                         <div class="product-select-box">
                             <div class="product-short">
                                 <p>Sort By:</p>
-                                <select class="nice-select">
-                                    <option value="trending">Relevance</option>
-                                    <option value="sales">Name (A - Z)</option>
-                                    <option value="sales">Name (Z - A)</option>
-                                    <option value="rating">Price (Low &gt; High)</option>
-                                    <option value="date">Rating (Lowest)</option>
-                                    <option value="price-asc">Model (A - Z)</option>
-                                    <option value="price-asc">Model (Z - A)</option>
-                                </select>
+                                <form id="sort-form" method="GET">
+                                    @foreach(request()->except('sort') as $key => $value)
+                                        @if(is_array($value))
+                                            @foreach($value as $v)
+                                                <input type="hidden" name="{{ $key }}[]" value="{{ $v }}">
+                                            @endforeach
+                                        @else
+                                            <input type="hidden" name="{{ $key }}" value="{{$value}}">
+                                        @endif
+                                    @endforeach
+                                    <select class="nice-select" name="sort" onchange="this.form.submit()">
+                                        <option value="">Mặc định</option>
+                                        <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Tên (A - Z)</option>
+                                        <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Tên (Z - A)</option>
+                                        <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Giá (thấp - cao)</option>
+                                        <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Giá (cao - thấp)</option>
+                                    </select>
+                                </form>
                             </div>
                         </div>
                         <!-- product-select-box end -->
@@ -196,8 +258,10 @@
                                                 <div class="single-product-wrap">
                                                     <div class="product-image">
                                                         <a href="{{route('landing_page.products.show', ['id' => $product->id])}}">
-                                                            <img class="primary-image" src="{{asset('storage/'.$product->thumbnail)}}" alt="">
-                                                            <img class="secondary-image" src="{{asset('storage/'.$product->thumbnail)}}" alt="">
+                                                            <img class="primary-image"
+                                                                 src="{{asset('storage/'.$product->thumbnail)}}" alt="">
+                                                            <img class="secondary-image"
+                                                                 src="{{asset('storage/'.$product->thumbnail)}}" alt="">
                                                         </a>
                                                         <div class="label-product">-10% off</div>
                                                     </div>
@@ -212,8 +276,12 @@
                                                                     <li class="no-star"><i class="fa fa-star"></i></li>
                                                                 </ul>
                                                             </div>
-                                                            <h4><a class="product_name" href="{{route('landing_page.products.show', ['id' => $product->id])}}">{{$product->name}}</a></h4>
-                                                            <div class="manufacturer"><a href="single-product.html">{{$product->brand->name}}</a></div>
+                                                            <h4><a class="product_name"
+                                                                   href="{{route('landing_page.products.show', ['id' => $product->id])}}">{{$product->name}}</a>
+                                                            </h4>
+                                                            <div class="manufacturer"><a
+                                                                    href="single-product.html">{{$product->brand->name}}</a>
+                                                            </div>
                                                             <div class="price-box">
                                                                 @if($product->discount != '')
                                                                     <span class="new-price">{{ number_format($product->discount) }}₫</span>
@@ -225,9 +293,15 @@
                                                         </div>
                                                         <div class="add-actions">
                                                             <ul class="add-actions-link">
-                                                                <li class="add-cart"><a href="#"><i class="ion-android-cart"></i> Thêm vào giỏ hàng</a></li>
-                                                                <li><a class="quick-view" data-bs-toggle="modal" data-bs-target="#exampleModalCenter" href="#"><i class="ion-android-open"></i></a></li>
-                                                                <li><a class="links-details" href="single-product.html"><i class="ion-clipboard"></i></a></li>
+                                                                <li class="add-cart">
+                                                                    <a href="#" ><i class="ion-android-cart"></i> Thêm vào giỏ hàng</a>
+                                                                </li>
+                                                                <li>
+                                                                    <a class="quick-view" data-bs-toggle="modal" data-bs-target="#exampleModalCenter" href="#"><i class="ion-android-open"></i></a>
+                                                                </li>
+                                                                <li>
+                                                                    <a class="links-details" href="single-product.html"><i class="ion-clipboard"></i></a>
+                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -246,7 +320,8 @@
                                                 <div class="col-lg-4 col-md-5 ">
                                                     <div class="product-image">
                                                         <a href="single-product.html">
-                                                            <img alt="" src="{{asset('storage/'.$product->thumbnail)}}" class="primary-image">
+                                                            <img alt="" src="{{asset('storage/'.$product->thumbnail)}}"
+                                                                 class="primary-image">
                                                         </a>
                                                     </div>
                                                 </div>
@@ -262,8 +337,11 @@
                                                                     <li class="no-star"><i class="fa fa-star"></i></li>
                                                                 </ul>
                                                             </div>
-                                                            <h4><a href="single-product.html" class="product_name">{{$product->name}}</a></h4>
-                                                            <div class="manufacturer"><a href="single-product.html">{{$product->brand->name}}</a></div>
+                                                            <h4><a href="single-product.html"
+                                                                   class="product_name">{{$product->name}}</a></h4>
+                                                            <div class="manufacturer"><a
+                                                                    href="single-product.html">{{$product->brand->name}}</a>
+                                                            </div>
                                                             <div class="price-box">
                                                                 @if($product->discount != '')
                                                                     <span class="new-price">{{ number_format($product->discount) }}₫</span>
@@ -272,12 +350,19 @@
                                                                     <span class="new-price">{{ number_format($product->price) }}₫</span>
                                                                 @endif
                                                             </div>
-                                                            <p>Long printed dress with thin adjustable straps. V-neckline and wiring under the bust with ruffles at the bottom of the dress.</p>
+                                                            <p>Long printed dress with thin adjustable straps.
+                                                                V-neckline and wiring under the bust with ruffles at the
+                                                                bottom of the dress.</p>
                                                             <div class="list-add-actions">
                                                                 <ul>
-                                                                    <li class="add-cart"><a href="#">Thêm vào giỏ hàng</a></li>
-                                                                    <li><a href="#" data-bs-target="#exampleModalCenter" data-bs-toggle="modal" class="quick-view"><i class="ion-android-open"></i></a></li>
-                                                                    <li><a href="single-product.html" class="links-details"><i class="ion-clipboard"></i></a></li>
+                                                                    <li class="add-cart"><a href="#">Thêm vào giỏ
+                                                                            hàng</a></li>
+                                                                    <li><a href="#" data-bs-target="#exampleModalCenter"
+                                                                           data-bs-toggle="modal" class="quick-view"><i
+                                                                                class="ion-android-open"></i></a></li>
+                                                                    <li><a href="single-product.html"
+                                                                           class="links-details"><i
+                                                                                class="ion-clipboard"></i></a></li>
                                                                 </ul>
                                                             </div>
                                                         </div>

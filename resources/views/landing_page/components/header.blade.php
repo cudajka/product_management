@@ -62,10 +62,10 @@
                             <ul>
                                 <li>
                                     <a href="#">
-                                                    <span class="item-cart-inner">
-                                                        <span class="item-cont">2</span>
-                                                        My Cart
-                                                    </span>
+                                        <span class="item-cart-inner">
+                                            <span class="item-cont">2</span>
+                                            My Cart
+                                        </span>
                                         <div class="item-total">$237.00</div>
                                     </a>
                                     <ul class="shopping-cart-wrapper">

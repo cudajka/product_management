@@ -74,9 +74,9 @@
                                     <p>100% cotton double printed dress. Black and white striped top and orange high waisted skater skirt bottom.</p>
                                     <div class="modal-size">
                                         <h4>Size</h4>
-                                        <select>
+                                        <select class="select-size">
                                             @foreach($variants as $variant)
-                                                <option title="{{$variant->name}}" value="{{$variant->size_id}}" data-quantity="{{ $variant->quantity }}">{{$variant->size->name}}</option>
+                                                <option title="{{$variant->name}}" value="{{$variant->size->name}}" data-quantity="{{ $variant->quantity }}">{{$variant->size->name}}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -95,11 +95,17 @@
                                         </div>
                                     </div>
                                     <div class="quick-add-to-cart">
-                                        <form class="modal-cart">
+                                        <form class="form-add-cart" action="{{route('cart.add.new')}}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{$product->id}}">
+                                            <input type="hidden" name="name" value="{{$product->name}}">
+                                            <input type="hidden" name="price" value="{{$product->price}}">
+                                            <input type="hidden" name="size" value="" class="select-new-size">
+                                            <input type="hidden" name="color_id" value="{{$product->color_id}}">
                                             <div class="quantity">
-                                                <label>Quantity</label>
+                                                <p>Quantity</p>
                                                 <div class="cart-plus-minus">
-                                                    <input class="cart-plus-minus-box" type="text" value="1" min="1">
+                                                    <input class="cart-plus-minus-box" name="quantity" type="text" value="1" min="1">
                                                 </div>
                                             </div>
                                             <button class="add-to-cart" type="submit">Add to cart</button>
@@ -498,6 +504,33 @@
     </div>
     <!-- product-area end -->
 
+@endsection
+
+@section('script')
+    <script>
+        $(document).ready(function () {
+            $('.form-add-cart').submit(function (e) {
+                e.preventDefault()
+
+                console.log('submit form')
+                // console.log($(this).serialize())
+                $.ajax({
+                    url: $(this).attr('action'),
+                    method: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        console.log('response', response)
+                    }
+                })
+            })
+
+            // select size
+            $('.select-size').change(function (){
+                // console.log($(this).val())
+                $('.select-new-size').val(parseInt($(this).val()))
+            })
+        })
+    </script>
 @endsection
 
 @extends('landing_page.components.footer')

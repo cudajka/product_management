@@ -56,6 +56,7 @@
     <script src="{{url('/frontend')}}/js/plugins.js"></script>
     <!-- main JS -->
     <script src="{{url('/frontend')}}/js/main.js"></script>
+    @yield('script')
 </body>
 
 <!-- Mirrored from htmldemo.net/juta/juta-v1/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sat, 26 Apr 2025 06:05:38 GMT -->

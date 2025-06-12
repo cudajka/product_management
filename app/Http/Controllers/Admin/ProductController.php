@@ -157,6 +157,7 @@ class ProductController extends Controller
 //        dd($request->all());
          $request->validate([
             'name' => 'required | unique:products',
+            'code' => 'required | unique:products',
             'price' => 'required | integer',
             'category_id' => 'required',
             'brand_id' => 'required',
@@ -175,6 +176,7 @@ class ProductController extends Controller
 //        $extension = $request->file('thumbnail')->getClientOriginalExtension();
 
         $product->name = $request->name;
+        $product->code = $request->code;
         $product->status = $request->status;
         $product->group = $request->group;
         $product->price = $request->price;
@@ -183,7 +185,6 @@ class ProductController extends Controller
         $product->category_id = $request->category_id;
         $product->brand_id = $request->brand_id;
         $product->description = $request->description;
-        $product->save();
 
         //xu ly nhieu anh o day
 
@@ -256,6 +257,7 @@ class ProductController extends Controller
 //                }
 //            }
 //        }
+        $product->save();
 
         return redirect()->route('products.index')->with('success', 'The product has been created.');
     }
@@ -312,6 +314,7 @@ class ProductController extends Controller
 //        $product_id = $_POST['product_id'];
         $request->validate([
             'name' => 'required|unique:products,name,'.$id,
+            'code' => 'required|unique:products,code,'.$id,
             'price' => 'required | integer',
             'category_id' => 'required',
             'brand_id' => 'required',
@@ -322,6 +325,7 @@ class ProductController extends Controller
         $product = Product::findOrFail($id);
 
         $product->name = $request->input('name');
+        $product->code = $request->input('code');
         $product->status = $request->input('status');
         $product->group = $request->input('group');
         $product->price = $request->input('price');

@@ -1,29 +1,29 @@
 (function ($) {
  "use strict";
-    
+
 /*----------------------
-    WOW active 
+    WOW active
 ------------------------- */
 	new WOW().init();
-    
+
 /*-------------------------
-    Notification 
+    Notification
 ---------------------------*/
 $('.notification-close button').on('click', function() {
     $('.notification-section').slideUp();
-});  
+});
 /*-----------------------
     jQuery MeanMenu
 ------------------------- */
 $('#mobile-menu-active').meanmenu({
     meanScreenWidth: "991",
     meanMenuContainer: ".mobile-menu-area .mobile-menu",
-});  
+});
 
 /*-------------------------
     stickey menu
 ------------------------- */
-$(window).on('scroll',function() {    
+$(window).on('scroll',function() {
    var scroll = $(window).scrollTop();
    if (scroll < 265) {
     $(".sticky-header").removeClass("sticky");
@@ -31,9 +31,9 @@ $(window).on('scroll',function() {
     $(".sticky-header").addClass("sticky");
    }
 });
-    
+
 /*---------------------------------
-    Header Top Dropdown Menu 
+    Header Top Dropdown Menu
 -----------------------------------*/
 $( '.drodown-show > a,.shopping-cart li > a' ).on('click', function(e) {
     e.preventDefault();
@@ -44,11 +44,11 @@ $( '.drodown-show > a,.shopping-cart li > a' ).on('click', function(e) {
         $( '.drodown-show > a , .shopping-cart li > a' ).removeClass('active').siblings('.open-dropdown').slideUp()
         $(this).addClass('active').siblings('.open-dropdown').slideDown();
     }
-}); 
-    
+});
+
 /*-------------------------
     owl active
---------------------------- */    
+--------------------------- */
 $('.slider-active').owlCarousel({
     loop:true,
     items:1,
@@ -61,11 +61,11 @@ $('.slider-active').owlCarousel({
         1000:{items:1},
         1200:{items:1}
     }
-}); 
-    
+});
+
 /*-------------------------
     owl active
---------------------------- */    
+--------------------------- */
 $('.product-active').owlCarousel({
     loop:true,
     items:5,
@@ -81,11 +81,11 @@ $('.product-active').owlCarousel({
         992:{items:4},
         1200:{items:5}
     }
-}); 
-    
+});
+
 /*-------------------------
     owl active
---------------------------- */    
+--------------------------- */
 $('.product-active-2').owlCarousel({
     loop:true,
     items:6,
@@ -102,11 +102,11 @@ $('.product-active-2').owlCarousel({
         1200:{items:5},
         1800:{items:6}
     }
-}); 
-    
+});
+
 /*-------------------------
     owl active
---------------------------- */    
+--------------------------- */
 $('.product-active-3').owlCarousel({
     loop:true,
     items:6,
@@ -123,11 +123,11 @@ $('.product-active-3').owlCarousel({
         1200:{items:4},
         1800:{items:6}
     }
-});  
-    
+});
+
 /*--------------------------
  owl active
------------------------------- */    
+------------------------------ */
 $('.single-product-active').owlCarousel({
     loop:true,
     items:4,
@@ -142,11 +142,11 @@ $('.single-product-active').owlCarousel({
         992:{items:3},
         1200:{items:3}
     }
-});  
-    
+});
+
 /*--------------------------
  owl active
------------------------------- */    
+------------------------------ */
 $('.pos-product-active').owlCarousel({
     loop:true,
     items:2,
@@ -162,10 +162,10 @@ $('.pos-product-active').owlCarousel({
         1200:{items:2},
         1800:{items:2}
     }
-});      
+});
 /*--------------------------
  owl active
------------------------------- */    
+------------------------------ */
 $('.latest-blog-active').owlCarousel({
     loop:true,
     items:2,
@@ -181,12 +181,12 @@ $('.latest-blog-active').owlCarousel({
         1200:{items:4},
         1800:{items:4}
     }
-}); 
-    
+});
+
 /*----------------------------
  owl active
 ------------------------------ */
-    
+
 $('.testimonials-active').owlCarousel({
     loop:true,
     items:1,
@@ -200,7 +200,7 @@ $('.testimonials-active').owlCarousel({
         1200:{items:1}
     }
 });
-    
+
 /*---------------------------
 	Count Down Timer
 ----------------------------*/
@@ -209,47 +209,47 @@ $('[data-countdown]').each(function() {
 	$this.countdown(finalDate, function(event) {
 		$this.html(event.strftime('<span class="cdown day"><span class="time-count">%-D</span> <p>Days</p></span> <span class="cdown hour"><span class="time-count">%-H</span> <p>Hours</p></span> <span class="cdown minutes"><span class="time-count">%M</span> <p>mins</p></span> <span class="cdown second"><span class="time-count">%S</span> <p>secs</p></span>'));
 	});
-}); 
-    
+});
+
 /*-------------------------
     Nice Select
-----------------------------*/	
-$('.nice-select').niceSelect(); 
-    
-    
+----------------------------*/
+$('.nice-select').niceSelect();
+
+
 /*-----------------------------
     elevateZoom
--------------------------------*/	
+-------------------------------*/
 $("#zoom1").elevateZoom({
-    gallery:'gallery_01', 
+    gallery:'gallery_01',
     responsive : true,
     zoomType : 'inner',
     cursor: 'crosshair'
-}); 
+});
 /*-------------------------------
   showlogin toggle function
 --------------------------------*/
 $( '#showlogin' ).on('click', function() {
     $( '#checkout-login' ).slideToggle(500);
-}); 
-    
+});
+
 /*-------------------------------
   showcoupon toggle function
 ---------------------------------*/
 $( '#showcoupon' ).on('click', function() {
     $( '#checkout-coupon' ).slideToggle(500);
 });
-    
+
 /*--- Checkout ---*/
 $("#chekout-box").on("change",function(){
     $(".account-create").slideToggle("100");
 });
-    
+
 /*-- Checkout -----*/
 $("#chekout-box-2").on("change",function(){
     $(".ship-box-info").slideToggle("100");
-}); 
-    
+});
+
 /*-----------------------
     Accordion
 -------------------------*/
@@ -260,11 +260,11 @@ $(".faequently-accordion").collapse({
   },
   close: function() {
     this.slideUp(300);
-  }		
-});	  
-    
-    
-/*------------------------------ 
+  }
+});
+
+
+/*------------------------------
     10. Cart Plus Minus Button
 ---------------------------------*/
 $(".cart-plus-minus").append('<div class="dec qtybutton"><i class="fa fa-angle-down"></i></div><div class="inc qtybutton"><i class="fa fa-angle-up"></i></div>');
@@ -282,8 +282,8 @@ $(".qtybutton").on("click", function() {
       }
       }
     $button.parent().find("input").val(newVal);
-  }); 
-    
+  });
+
 /*------------------------------
     Category menu Activation
 ------------------------------*/
@@ -302,15 +302,15 @@ $('.category-sub-menu li.has-sub > a').on('click', function () {
         element.siblings('li').find('li').removeClass('open');
         element.siblings('li').find('ul').slideUp();
     }
-}); 
+});
 /* ---------------------------------
-    counterUp 
+    counterUp
 -----------------------------*/
 $('.count').counterUp({
     delay: 10,
     time: 1000
 });
-    
+
 /*------------------------------
     ScrollUp Active
 --------------------------------*/
@@ -320,10 +320,10 @@ $.scrollUp({
     scrollSpeed: 900,
     animation: 'fade'
 });
-    
+
 /*-------------------------------
     Instafeed
----------------------------------*/   
+---------------------------------*/
 if($('#instagram-feed').length) {
 var feed = new Instafeed({
     get: 'user',
@@ -335,16 +335,5 @@ var feed = new Instafeed({
     template: '<li><a href="{{link}}" target="_new"><img src="{{image}}" /></a></li>',
 });
 feed.run();
-}  
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-})(jQuery); 
+}
+})(jQuery);
